@@ -1,0 +1,101 @@
+{
+  "name": "رنيم فاي | التعلم الممتع",
+  "short_name": "رنيم فاي",
+  "description": "تطبيقات تعليمية تفاعلية باللغة العربية للأطفال وفق المنهج الجزائري",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f2f8f6",
+  "theme_color": "#1aab8a",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["education", "kids"],
+  "iarc_rating_id": "",
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x1200",
+      "type": "image/png",
+      "label": "الصفحة الرئيسية لمنصة رنيم فاي"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "لغة عربية",
+      "short_name": "عربية",
+      "description": "تطبيقات اللغة العربية",
+      "url": "/?cat=لغة عربية",
+      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "رياضيات",
+      "short_name": "رياضيات",
+      "description": "تطبيقات الرياضيات",
+      "url": "/?cat=رياضيات",
+      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+    }
+  ]
+}
