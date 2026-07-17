@@ -10,8 +10,10 @@
   "theme_color": "#1aab8a",
   "lang": "ar",
   "dir": "rtl",
-  "categories": ["education", "kids"],
-  "iarc_rating_id": "",
+  "categories": [
+    "education",
+    "kids"
+  ],
   "screenshots": [
     {
       "src": "/og-image.png",
@@ -88,14 +90,24 @@
       "short_name": "عربية",
       "description": "تطبيقات اللغة العربية",
       "url": "/?cat=لغة عربية",
-      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "رياضيات",
       "short_name": "رياضيات",
       "description": "تطبيقات الرياضيات",
       "url": "/?cat=رياضيات",
-      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ]
 }
