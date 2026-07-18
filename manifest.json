@@ -11,7 +11,10 @@
   "orientation": "portrait-primary",
   "background_color": "#f2f8f6",
   "theme_color": "#1aab8a",
-  "categories": ["education", "kids"],
+  "categories": [
+    "education",
+    "kids"
+  ],
   "icons": [
     {
       "src": "https://fictional-lamp-lac.vercel.app/icon-72.png",
@@ -81,6 +84,13 @@
       "type": "image/png",
       "form_factor": "narrow",
       "label": "الصفحة الرئيسية — رنيم فاي"
+    },
+    {
+      "src": "https://fictional-lamp-lac.vercel.app/og-image.png",
+      "sizes": "1200x1200",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "منصة التعلم الممتع"
     }
   ],
   "shortcuts": [
@@ -108,5 +118,6 @@
         }
       ]
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }
