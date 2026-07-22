@@ -20,7 +20,43 @@
 <meta name="description" content="تطبيقات تعليمية تفاعلية باللغة العربية للأطفال من رياض الأطفال حتى الطور الابتدائي، وفق المنهج الجزائري — رنيم فاي">
 <meta name="keywords" content="تعليم, أطفال, عربية, جزائر, تطبيقات تعليمية, رنيم فاي, التعلم الممتع">
 
-<!-- ===== PWA Core ===== -->
+<!-- ===== Firebase SDK ===== -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile }
+    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, orderBy, serverTimestamp, increment }
+    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  // ══ إعدادات Firebase — رنيم فاي ══
+  const firebaseConfig = {
+    apiKey:            "AIzaSyARoIE5BYqfqxSC9slARzOIznX7APa28_k",
+    authDomain:        "ranimfey-funlearning.firebaseapp.com",
+    projectId:         "ranimfey-funlearning",
+    storageBucket:     "ranimfey-funlearning.firebasestorage.app",
+    messagingSenderId: "138942779928",
+    appId:             "1:138942779928:web:4b9412024140b40436696d",
+    measurementId:     "G-24CGDXCE55"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // ── تصدير للاستخدام العام ──
+  window._fb = { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+    signOut, onAuthStateChanged, updateProfile,
+    doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, orderBy, serverTimestamp, increment };
+
+  // ── متابعة حالة المستخدم ──
+  onAuthStateChanged(auth, user => {
+    window._currentUser = user || null;
+    if(typeof updateAuthUI === 'function') updateAuthUI(user);
+    if(typeof renderGrid  === 'function') renderGrid();
+  });
+</script>
+
+
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#1aab8a">
 <meta name="color-scheme" content="light dark">
@@ -482,7 +518,140 @@ footer{
 .btn-del-row{background:#fff0f0;color:#e53e3e}
 [data-theme="dark"] .btn-del-row{background:#3a1010}
 
-/* ===== PAID / FREE FILTER BUTTONS ===== */
+/* ===== AUTH BUTTON IN HEADER ===== */
+.auth-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 14px;border-radius:50px;border:1.5px solid rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.15);color:white;font-family:inherit;
+  font-size:0.82rem;font-weight:600;cursor:pointer;
+  transition:all 0.22s;backdrop-filter:blur(4px);white-space:nowrap;
+}
+.auth-btn:hover{background:rgba(255,255,255,0.28);border-color:rgba(255,255,255,0.5)}
+.auth-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+
+/* ===== AUTH MODAL ===== */
+#authOverlay{display:none;position:fixed;inset:0;background:rgba(10,14,28,0.65);z-index:700;
+  padding:20px 16px;overflow-y:auto;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.auth-modal{background:var(--surface);max-width:420px;margin:60px auto;border-radius:20px;
+  overflow:hidden;box-shadow:0 16px 60px rgba(0,0,0,0.28);animation:scaleIn 0.26s ease both}
+.auth-modal-header{background:var(--brand-grad);padding:22px 22px 18px;text-align:center}
+.auth-modal-header .auth-logo{font-size:2rem;margin-bottom:6px}
+.auth-modal-header h3{color:white;font-size:1rem;font-weight:700;margin:0}
+.auth-tabs{display:flex;border-bottom:1px solid var(--border)}
+.auth-tab{flex:1;padding:12px;border:none;background:none;font-family:inherit;
+  font-size:0.88rem;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent}
+.auth-tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.auth-body{padding:22px 20px}
+.auth-field{margin-bottom:12px}
+.auth-field label{display:block;font-size:0.8rem;font-weight:600;color:var(--ink-soft);margin-bottom:5px}
+.auth-field input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;
+  font-family:inherit;font-size:0.9rem;color:var(--ink);background:var(--surface);
+  outline:none;transition:border-color 0.2s}
+.auth-field input:focus{border-color:var(--teal)}
+.btn-auth{width:100%;padding:11px;background:var(--brand-grad);color:white;border:none;
+  border-radius:9px;font-family:inherit;font-size:0.92rem;font-weight:700;cursor:pointer;
+  transition:filter 0.2s;margin-top:4px;box-shadow:0 3px 12px rgba(26,171,138,0.3)}
+.btn-auth:hover{filter:brightness(1.08)}
+.auth-err{color:#e53e3e;font-size:0.8rem;margin-top:8px;text-align:center;display:none}
+.auth-close{position:absolute;top:14px;left:14px;background:rgba(255,255,255,0.2);
+  border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;
+  font-size:1rem;display:flex;align-items:center;justify-content:center}
+
+/* ===== JOURNEY PAGE ===== */
+#journeyPage{display:none;position:fixed;inset:0;background:var(--paper);z-index:400;overflow-y:auto}
+.journey-header{background:var(--brand-grad);padding:20px 22px;display:flex;align-items:center;gap:12px}
+.journey-back{background:rgba(255,255,255,0.2);border:none;color:white;width:36px;height:36px;
+  border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center}
+.journey-title{color:white;font-size:1rem;font-weight:700}
+.journey-body{max-width:700px;margin:0 auto;padding:24px 20px}
+
+/* stats */
+.journey-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border-radius:14px;padding:16px;text-align:center;
+  border:1px solid var(--border);box-shadow:0 2px 8px rgba(26,171,138,0.07)}
+.stat-num{font-size:1.8rem;font-weight:800;color:var(--teal);margin-bottom:2px}
+.stat-lbl{font-size:0.75rem;color:var(--ink-soft)}
+
+/* badges */
+.badges-section{margin-bottom:24px}
+.badges-title{font-size:0.85rem;font-weight:700;color:var(--ink);margin-bottom:12px}
+.badges-grid{display:flex;flex-wrap:wrap;gap:10px}
+.badge-item{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);
+  background:var(--surface);font-size:1.4rem;min-width:70px;
+}
+.badge-item.earned{border-color:var(--gold);background:var(--gold-pale)}
+.badge-item.locked{opacity:0.4;filter:grayscale(1)}
+.badge-lbl{font-size:0.68rem;color:var(--ink-soft);text-align:center}
+
+/* completed apps */
+.completed-title{font-size:0.85rem;font-weight:700;color:var(--ink);margin-bottom:12px}
+.completed-list{display:flex;flex-direction:column;gap:8px}
+.completed-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--surface);border-radius:10px;
+  border:1px solid var(--border);
+}
+.completed-icon{font-size:1.2rem}
+.completed-name{flex:1;font-size:0.86rem;font-weight:600;color:var(--ink)}
+.completed-date{font-size:0.72rem;color:var(--ink-soft)}
+
+/* ===== RATINGS ON CARDS ===== */
+.card-rating{display:flex;align-items:center;gap:4px;margin-top:2px}
+.stars-display{color:#f5a623;font-size:0.8rem;letter-spacing:-1px}
+.rating-count{font-size:0.72rem;color:var(--ink-soft)}
+
+/* rating modal */
+#ratingOverlay{display:none;position:fixed;inset:0;background:rgba(10,14,28,0.6);z-index:550;
+  padding:20px 16px;overflow-y:auto;backdrop-filter:blur(6px)}
+.rating-modal{background:var(--surface);max-width:400px;margin:80px auto;border-radius:18px;
+  overflow:hidden;box-shadow:0 12px 50px rgba(0,0,0,0.25);animation:scaleIn 0.24s ease both}
+.rating-modal-header{background:var(--brand-grad);padding:16px 20px;display:flex;
+  justify-content:space-between;align-items:center}
+.rating-modal-header span{color:white;font-weight:700;font-size:0.95rem}
+.rating-body{padding:20px}
+.rating-app-name{font-size:0.92rem;font-weight:700;color:var(--ink);text-align:center;
+  margin-bottom:16px;padding:10px;background:var(--paper);border-radius:8px}
+.stars-input{display:flex;justify-content:center;gap:8px;margin-bottom:16px}
+.star-btn{font-size:2rem;background:none;border:none;cursor:pointer;
+  transition:transform 0.15s;color:#ddd;line-height:1}
+.star-btn.active{color:#f5a623}
+.star-btn:hover{transform:scale(1.2)}
+.rating-comment{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;
+  font-family:inherit;font-size:0.86rem;color:var(--ink);background:var(--surface);
+  outline:none;resize:none;margin-bottom:12px;transition:border-color 0.2s}
+.rating-comment:focus{border-color:var(--teal)}
+.btn-submit-rating{width:100%;padding:10px;background:var(--brand-grad);color:white;border:none;
+  border-radius:9px;font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;
+  transition:filter 0.2s}
+.btn-submit-rating:hover{filter:brightness(1.08)}
+.rating-success{color:var(--teal);font-size:0.82rem;text-align:center;margin-top:8px;display:none}
+
+/* reviews list */
+.reviews-list{margin-top:14px;display:flex;flex-direction:column;gap:8px;
+  max-height:200px;overflow-y:auto}
+.review-item{background:var(--paper);border-radius:8px;padding:10px 12px}
+.review-top{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.review-stars{color:#f5a623;font-size:0.78rem}
+.review-name{font-size:0.75rem;font-weight:600;color:var(--ink-soft)}
+.review-text{font-size:0.82rem;color:var(--ink);line-height:1.5}
+
+/* ===== COMPLETE BTN ON CARD ===== */
+.btn-complete{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:5px 10px;border:1.5px solid rgba(26,171,138,0.3);
+  border-radius:20px;background:transparent;
+  font-family:inherit;font-size:0.73rem;font-weight:600;
+  color:var(--teal);cursor:pointer;transition:all 0.2s;
+}
+.btn-complete:hover{background:var(--teal-pale);border-color:var(--teal)}
+.btn-complete.completed-btn{background:var(--teal);color:white;border-color:var(--teal)}
 .filter-paid-btn{border-color:rgba(224,123,42,0.35)!important;color:var(--gold)!important;background:rgba(254,240,228,0.7)!important}
 .filter-paid-btn:hover,.filter-paid-btn.active{background:linear-gradient(120deg,#e07b2a,#c96010)!important;border-color:transparent!important;color:white!important;box-shadow:0 3px 14px rgba(224,123,42,0.4)!important}
 [data-theme="dark"] .filter-paid-btn{background:rgba(58,32,8,0.6)!important;border-color:rgba(224,123,42,0.3)!important}
@@ -602,10 +771,22 @@ textarea.form-inp{resize:none}
       <span class="logo-sub">التعلم الممتع</span>
     </div>
   </div>
-  <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="تبديل الوضع">
-    <span id="darkIcon">🌙</span>
-    <span class="toggle-label" id="darkLabel">وضع الليل</span>
-  </button>
+  <div style="display:flex;align-items:center;gap:8px">
+    <!-- زر رحلتي — يظهر فقط عند تسجيل الدخول -->
+    <button id="journeyBtn" onclick="openJourney()" style="display:none"
+      class="auth-btn" title="رحلتي">
+      🏆 <span class="toggle-label">رحلتي</span>
+    </button>
+    <!-- زر المستخدم -->
+    <button class="auth-btn" id="authHeaderBtn" onclick="openAuth()">
+      <span class="auth-avatar" id="authAvatarIcon">👤</span>
+      <span class="toggle-label" id="authHeaderLabel">دخول</span>
+    </button>
+    <!-- زر الليل -->
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="تبديل الوضع">
+      <span id="darkIcon">🌙</span>
+    </button>
+  </div>
 </header>
 
 <!-- Hero -->
@@ -692,6 +873,121 @@ textarea.form-inp{resize:none}
       <button class="btn-unlock" onclick="tryUnlock()">🔓 فتح التطبيق</button>
       <p id="unlockErr" class="unlock-err">❌ كلمة السر غير صحيحة</p>
       <button class="btn-unlock-cancel" onclick="closeUnlock()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== نافذة تسجيل الدخول / إنشاء حساب ===== -->
+<div id="authOverlay">
+  <div class="auth-modal" style="position:relative">
+    <div class="auth-modal-header">
+      <button class="auth-close" onclick="closeAuth()">✕</button>
+      <div class="auth-logo">✦</div>
+      <h3>رنيم فاي | التعلم الممتع</h3>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin"  onclick="switchAuthTab('login')">دخول</button>
+      <button class="auth-tab"        id="tabSignup" onclick="switchAuthTab('signup')">حساب جديد</button>
+    </div>
+    <div class="auth-body">
+      <!-- تسجيل دخول -->
+      <div id="loginForm">
+        <div class="auth-field">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="loginEmail" placeholder="example@email.com">
+        </div>
+        <div class="auth-field">
+          <label>كلمة السر</label>
+          <input type="password" id="loginPass" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <button class="btn-auth" onclick="doLogin()">🔓 دخول</button>
+        <p id="loginErr" class="auth-err"></p>
+      </div>
+      <!-- إنشاء حساب -->
+      <div id="signupForm" style="display:none">
+        <div class="auth-field">
+          <label>الاسم</label>
+          <input type="text" id="signupName" placeholder="اسمك">
+        </div>
+        <div class="auth-field">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="signupEmail" placeholder="example@email.com">
+        </div>
+        <div class="auth-field">
+          <label>كلمة السر</label>
+          <input type="password" id="signupPass" placeholder="6 أحرف على الأقل"
+            onkeydown="if(event.key==='Enter')doSignup()">
+        </div>
+        <button class="btn-auth" onclick="doSignup()">✅ إنشاء حساب</button>
+        <p id="signupErr" class="auth-err"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== صفحة رحلتي ===== -->
+<div id="journeyPage">
+  <div class="journey-header">
+    <button class="journey-back" onclick="closeJourney()">←</button>
+    <span class="journey-title">🏆 رحلتي في التعلم</span>
+  </div>
+  <div class="journey-body">
+    <!-- إحصائيات -->
+    <div class="journey-stats">
+      <div class="stat-card">
+        <div class="stat-num" id="statCompleted">0</div>
+        <div class="stat-lbl">تطبيق مكتمل</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statPoints">0</div>
+        <div class="stat-lbl">نقطة</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statBadges">0</div>
+        <div class="stat-lbl">شارة</div>
+      </div>
+    </div>
+    <!-- شارات الإنجاز -->
+    <div class="badges-section">
+      <div class="badges-title">🎖️ شاراتي</div>
+      <div class="badges-grid" id="badgesGrid"></div>
+    </div>
+    <!-- التطبيقات المكتملة -->
+    <div>
+      <div class="completed-title">📚 التطبيقات المكتملة</div>
+      <div class="completed-list" id="completedList">
+        <p style="color:var(--ink-soft);font-size:0.85rem;text-align:center;padding:20px">
+          لم تكملي أي تطبيق بعد — ابدئي الآن! 🚀
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== نافذة التقييم ===== -->
+<div id="ratingOverlay">
+  <div class="rating-modal">
+    <div class="rating-modal-header">
+      <span>⭐ تقييم التطبيق</span>
+      <button onclick="closeRating()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:0.9rem">✕</button>
+    </div>
+    <div class="rating-body">
+      <div class="rating-app-name" id="ratingAppName"></div>
+      <!-- نجوم الإدخال -->
+      <div class="stars-input" id="starsInput">
+        <button class="star-btn" data-val="1" onclick="selectStar(1)">★</button>
+        <button class="star-btn" data-val="2" onclick="selectStar(2)">★</button>
+        <button class="star-btn" data-val="3" onclick="selectStar(3)">★</button>
+        <button class="star-btn" data-val="4" onclick="selectStar(4)">★</button>
+        <button class="star-btn" data-val="5" onclick="selectStar(5)">★</button>
+      </div>
+      <textarea class="rating-comment" id="ratingComment"
+        placeholder="اكتبي تعليقك (اختياري)..." rows="3"></textarea>
+      <button class="btn-submit-rating" onclick="submitRating()">إرسال التقييم</button>
+      <p id="ratingSuccess" class="rating-success">✅ شكراً على تقييمك!</p>
+      <!-- عرض التقييمات -->
+      <div class="reviews-list" id="reviewsList"></div>
     </div>
   </div>
 </div>
@@ -1102,6 +1398,25 @@ function renderGrid(){
       }
     }
 
+    // تقييم التطبيق من الكاش
+    var rData=_appRatings[i]||{avg:0,count:0};
+    var ratingHTML= rData.count>0
+      ? '<div class="card-rating">'+
+          '<span class="stars-display" style="color:#f5a623;font-size:0.78rem">'+
+            '★'.repeat(Math.round(rData.avg||0))+'☆'.repeat(5-Math.round(rData.avg||0))+
+          '</span>'+
+          '<span class="rating-count">('+rData.count+')</span>'+
+        '</div>'
+      : '<div class="card-rating"><span class="rating-count" style="font-size:0.72rem;color:var(--ink-soft)">لا يوجد تقييم بعد</span></div>';
+
+    // زر أكملت
+    var completeBtn = !isPlaceholder
+      ? '<button class="btn-complete'+(isDone?' completed-btn':'')+
+          '" onclick="event.stopPropagation();markComplete('+i+',this)">'+
+          (isDone?'✅ مكتمل':'○ أكملت')+
+          '</button>'
+      : '';
+
     card.innerHTML=
       '<div class="card-actions-top">'+
         '<button class="btn-fav'+(isFav?' active':'')+'" onclick="event.stopPropagation();toggleFav('+i+',this)" title="'+(isFav?'إزالة من المفضلة':'أضف للمفضلة')+'">'+(isFav?'⭐':'☆')+'</button>'+
@@ -1112,15 +1427,20 @@ function renderGrid(){
         '<div class="card-meta">'+
           '<span class="card-badge" style="background:'+c.bg+';color:'+c.color+'">'+esc(app.cat)+'</span>'+
           '<div class="card-title">'+esc(app.name)+'</div>'+
+          ratingHTML+
         '</div>'+
       '</div>'+
       '<p class="card-desc">'+esc(app.desc)+'</p>'+
       '<div class="card-footer">'+
-        '<div style="display:flex;align-items:center;gap:5px">'+
+        '<div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">'+
           '<span class="card-age">'+esc(app.age||'')+'</span>'+
           '<span class="done-badge">✓ منجز</span>'+
         '</div>'+
         '<div class="card-footer-btns">'+
+          (isPlaceholder?''
+            :'<button class="btn-status" style="background:var(--paper);color:var(--ink-soft);border:1px solid var(--border)" '+
+              'onclick="event.stopPropagation();openRating('+i+')" title="تقييم التطبيق">⭐</button>')+
+          completeBtn+
           statusBtn+
           previewBtn+
         '</div>'+
@@ -1587,6 +1907,361 @@ function showBackupMsg(txt,color){
 }
 
 // ===================================================
+//  AUTH UI
+// ===================================================
+function updateAuthUI(user){
+  var btn   = document.getElementById('authHeaderBtn');
+  var lbl   = document.getElementById('authHeaderLabel');
+  var icon  = document.getElementById('authAvatarIcon');
+  var jBtn  = document.getElementById('journeyBtn');
+  if(!btn)return;
+  if(user){
+    var name = user.displayName || user.email.split('@')[0];
+    icon.textContent = name.charAt(0).toUpperCase();
+    lbl.textContent  = name;
+    btn.onclick = function(){ if(confirm('هل تريدين تسجيل الخروج؟')) doLogout() };
+    if(jBtn) jBtn.style.display='flex';
+    loadJourneyData();
+  } else {
+    icon.textContent = '👤';
+    lbl.textContent  = 'دخول';
+    btn.onclick = openAuth;
+    if(jBtn) jBtn.style.display='none';
+  }
+}
+
+function openAuth(){
+  document.getElementById('authOverlay').style.display='block';
+  document.body.style.overflow='hidden';
+  switchAuthTab('login');
+}
+function closeAuth(){
+  document.getElementById('authOverlay').style.display='none';
+  document.body.style.overflow='';
+}
+document.getElementById('authOverlay').addEventListener('click',function(e){
+  if(e.target===this)closeAuth();
+});
+
+function switchAuthTab(tab){
+  document.getElementById('loginForm').style.display  = tab==='login' ?'block':'none';
+  document.getElementById('signupForm').style.display = tab==='signup'?'block':'none';
+  document.getElementById('tabLogin').classList.toggle('active',  tab==='login');
+  document.getElementById('tabSignup').classList.toggle('active', tab==='signup');
+  document.getElementById('loginErr').style.display  ='none';
+  document.getElementById('signupErr').style.display ='none';
+}
+
+function doLogin(){
+  var fb=window._fb; if(!fb){alert('Firebase غير متصل');return}
+  var email = document.getElementById('loginEmail').value.trim();
+  var pass  = document.getElementById('loginPass').value;
+  var err   = document.getElementById('loginErr');
+  err.style.display='none';
+  fb.signInWithEmailAndPassword(fb.auth, email, pass)
+    .then(function(){closeAuth()})
+    .catch(function(e){
+      err.style.display='block';
+      err.textContent = e.code==='auth/user-not-found'?'البريد غير مسجل':
+                        e.code==='auth/wrong-password'?'كلمة السر خاطئة':
+                        e.code==='auth/invalid-email'?'بريد إلكتروني غير صالح':
+                        'خطأ: '+e.message;
+    });
+}
+
+function doSignup(){
+  var fb=window._fb; if(!fb){alert('Firebase غير متصل');return}
+  var name  = document.getElementById('signupName').value.trim();
+  var email = document.getElementById('signupEmail').value.trim();
+  var pass  = document.getElementById('signupPass').value;
+  var err   = document.getElementById('signupErr');
+  err.style.display='none';
+  if(!name){err.style.display='block';err.textContent='أدخلي اسمك';return}
+  fb.createUserWithEmailAndPassword(fb.auth, email, pass)
+    .then(function(cred){
+      return fb.updateProfile(cred.user,{displayName:name}).then(function(){
+        return fb.setDoc(fb.doc(fb.db,'users',cred.user.uid),{
+          name:name, email:email,
+          completed:[], points:0, badges:[],
+          createdAt: fb.serverTimestamp()
+        });
+      });
+    })
+    .then(function(){closeAuth()})
+    .catch(function(e){
+      err.style.display='block';
+      err.textContent = e.code==='auth/email-already-in-use'?'البريد مستخدم مسبقاً':
+                        e.code==='auth/weak-password'?'كلمة السر قصيرة جداً':
+                        'خطأ: '+e.message;
+    });
+}
+
+function doLogout(){
+  var fb=window._fb; if(!fb)return;
+  fb.signOut(fb.auth);
+}
+
+// ===================================================
+//  JOURNEY PAGE
+// ===================================================
+var BADGES_DEF=[
+  {id:'first',  icon:'🌱', label:'أول خطوة',  req:1},
+  {id:'three',  icon:'🔥', label:'ثلاثة',      req:3},
+  {id:'five',   icon:'⭐', label:'خمسة',       req:5},
+  {id:'ten',    icon:'🏆', label:'عشرة',       req:10},
+  {id:'twenty', icon:'💎', label:'عشرون',      req:20},
+];
+
+function openJourney(){
+  document.getElementById('journeyPage').style.display='block';
+  document.body.style.overflow='hidden';
+  loadJourneyData();
+}
+function closeJourney(){
+  document.getElementById('journeyPage').style.display='none';
+  document.body.style.overflow='';
+}
+
+function loadJourneyData(){
+  var fb=window._fb; var user=window._currentUser;
+  if(!fb||!user)return;
+  fb.getDoc(fb.doc(fb.db,'users',user.uid)).then(function(snap){
+    if(!snap.exists())return;
+    var data=snap.data();
+    var completed=data.completed||[];
+    var points   =data.points  ||0;
+    var earned   =data.badges  ||[];
+    // إحصائيات
+    var sc=document.getElementById('statCompleted');
+    var sp=document.getElementById('statPoints');
+    var sb=document.getElementById('statBadges');
+    if(sc)sc.textContent=completed.length;
+    if(sp)sp.textContent=points;
+    if(sb)sb.textContent=earned.length;
+    // شارات
+    var bg=document.getElementById('badgesGrid');
+    if(bg){
+      bg.innerHTML='';
+      BADGES_DEF.forEach(function(b){
+        var isEarned=earned.indexOf(b.id)>=0;
+        var el=document.createElement('div');
+        el.className='badge-item '+(isEarned?'earned':'locked');
+        el.innerHTML='<span>'+b.icon+'</span><span class="badge-lbl">'+b.label+'</span>';
+        el.title=isEarned?'مكتسبة ✅':'أكملي '+b.req+' تطبيقات للحصول عليها';
+        bg.appendChild(el);
+      });
+    }
+    // التطبيقات المكتملة
+    var cl=document.getElementById('completedList');
+    if(cl){
+      if(!completed.length){
+        cl.innerHTML='<p style="color:var(--ink-soft);font-size:0.85rem;text-align:center;padding:20px">لم تكملي أي تطبيق بعد 🚀</p>';
+      } else {
+        cl.innerHTML='';
+        var apps=loadApps();
+        completed.forEach(function(item){
+          var app=apps[item.idx]||{name:item.name||'تطبيق',icon:'📱'};
+          var row=document.createElement('div');
+          row.className='completed-row';
+          row.innerHTML='<span class="completed-icon">'+(app.icon||'📱')+'</span>'+
+            '<span class="completed-name">'+esc(app.name||item.name)+'</span>'+
+            '<span class="completed-date">'+(item.date||'')+'</span>';
+          cl.appendChild(row);
+        });
+      }
+    }
+  }).catch(function(e){console.warn('Journey load error:',e)});
+}
+
+function markComplete(appIdx, btn){
+  var fb=window._fb; var user=window._currentUser;
+  var apps=loadApps(); var app=apps[appIdx];
+  if(!app)return;
+
+  if(!fb||!user){
+    // حفظ محلي فقط
+    toggleDone(appIdx, btn.closest('.card').querySelector('.btn-done-icon'));
+    return;
+  }
+
+  var userRef=fb.doc(fb.db,'users',user.uid);
+  fb.getDoc(userRef).then(function(snap){
+    var data=snap.exists()?snap.data():{completed:[],points:0,badges:[]};
+    var completed=data.completed||[];
+    var already=completed.some(function(c){return c.idx===appIdx});
+    if(already){
+      // إلغاء
+      completed=completed.filter(function(c){return c.idx!==appIdx});
+      return fb.updateDoc(userRef,{completed:completed,points:Math.max(0,(data.points||0)-10)})
+        .then(function(){
+          btn.classList.remove('completed-btn');
+          btn.textContent='○ أكملت';
+          showToast('تم إلغاء الإكمال');
+          loadJourneyData();
+        });
+    }
+    // إضافة
+    var today=new Date().toLocaleDateString('ar-DZ');
+    completed.push({idx:appIdx,name:app.name,date:today});
+    var newPoints=(data.points||0)+10;
+    // تحقق من الشارات
+    var badges=data.badges||[];
+    BADGES_DEF.forEach(function(b){
+      if(completed.length>=b.req && badges.indexOf(b.id)<0){
+        badges.push(b.id);
+        showToast('🎖️ حصلتِ على شارة: '+b.label);
+      }
+    });
+    return fb.updateDoc(userRef,{completed:completed,points:newPoints,badges:badges})
+      .then(function(){
+        btn.classList.add('completed-btn');
+        btn.textContent='✅ مكتمل';
+        showToast('✅ أحسنتِ! +10 نقاط');
+        loadJourneyData();
+      });
+  }).catch(function(e){console.warn('Complete error:',e)});
+}
+
+// ===================================================
+//  RATINGS
+// ===================================================
+var _ratingAppIdx=-1, _selectedStar=0;
+
+function openRating(i){
+  _ratingAppIdx=i; _selectedStar=0;
+  var app=loadApps()[i];
+  document.getElementById('ratingAppName').textContent=(app?app.name:'التطبيق');
+  document.getElementById('ratingComment').value='';
+  document.getElementById('ratingSuccess').style.display='none';
+  selectStar(0);
+  document.getElementById('ratingOverlay').style.display='block';
+  document.body.style.overflow='hidden';
+  loadReviews(i);
+}
+function closeRating(){
+  document.getElementById('ratingOverlay').style.display='none';
+  document.body.style.overflow='';
+  _ratingAppIdx=-1;
+}
+document.getElementById('ratingOverlay').addEventListener('click',function(e){
+  if(e.target===this)closeRating();
+});
+
+function selectStar(val){
+  _selectedStar=val;
+  document.querySelectorAll('.star-btn').forEach(function(btn){
+    btn.classList.toggle('active', parseInt(btn.getAttribute('data-val'))<=val);
+  });
+}
+
+function submitRating(){
+  var fb=window._fb;
+  if(!fb){showToast('Firebase غير متصل');return}
+  if(!_selectedStar){showToast('اختاري عدد النجوم أولاً');return}
+  var comment=document.getElementById('ratingComment').value.trim();
+  var user=window._currentUser;
+  var userName=user?(user.displayName||'مستخدم'):'زائر';
+  var col=fb.collection(fb.db,'ratings','app_'+_ratingAppIdx,'reviews');
+  fb.addDoc(col,{
+    stars:_selectedStar, comment:comment,
+    userName:userName, createdAt:fb.serverTimestamp()
+  }).then(function(){
+    document.getElementById('ratingSuccess').style.display='block';
+    document.getElementById('ratingComment').value='';
+    selectStar(0);
+    loadReviews(_ratingAppIdx);
+    // تحديث متوسط النجوم في بيانات التطبيق
+    updateAppRating(_ratingAppIdx);
+    setTimeout(function(){
+      document.getElementById('ratingSuccess').style.display='none';
+    },2500);
+  }).catch(function(e){showToast('خطأ: '+e.message)});
+}
+
+function loadReviews(appIdx){
+  var fb=window._fb; if(!fb)return;
+  var list=document.getElementById('reviewsList');
+  if(!list)return;
+  list.innerHTML='<p style="font-size:0.8rem;color:var(--ink-soft);text-align:center">جارٍ التحميل…</p>';
+  var col=fb.collection(fb.db,'ratings','app_'+appIdx,'reviews');
+  fb.getDocs(fb.query(col,fb.orderBy('createdAt','desc')))
+    .then(function(snap){
+      if(snap.empty){list.innerHTML='<p style="font-size:0.8rem;color:var(--ink-soft);text-align:center;padding:10px">لا توجد تقييمات بعد — كوني الأولى!</p>';return}
+      list.innerHTML='';
+      snap.forEach(function(d){
+        var r=d.data();
+        var el=document.createElement('div');
+        el.className='review-item';
+        el.innerHTML='<div class="review-top">'+
+          '<span class="review-stars">'+'★'.repeat(r.stars)+'☆'.repeat(5-r.stars)+'</span>'+
+          '<span class="review-name">'+esc(r.userName||'زائر')+'</span>'+
+          '</div>'+
+          (r.comment?'<div class="review-text">'+esc(r.comment)+'</div>':'');
+        list.appendChild(el);
+      });
+    }).catch(function(){list.innerHTML=''});
+}
+
+function updateAppRating(appIdx){
+  var fb=window._fb; if(!fb)return;
+  var col=fb.collection(fb.db,'ratings','app_'+appIdx,'reviews');
+  fb.getDocs(col).then(function(snap){
+    var total=0,count=0;
+    snap.forEach(function(d){total+=d.data().stars||0;count++});
+    var avg=count?Math.round((total/count)*10)/10:0;
+    // حفظ الملخص
+    fb.setDoc(fb.doc(fb.db,'ratings','app_'+appIdx),{avg:avg,count:count},{merge:true});
+    // تحديث البطاقة في الواجهة
+    var ratingEl=document.querySelector('[data-index="'+appIdx+'"] .stars-display');
+    var countEl =document.querySelector('[data-index="'+appIdx+'"] .rating-count');
+    if(ratingEl)ratingEl.textContent=starsStr(avg);
+    if(countEl) countEl.textContent='('+count+')';
+  });
+}
+
+function starsStr(avg){
+  var full=Math.floor(avg), half=(avg-full)>=0.5?1:0, empty=5-full-half;
+  return '★'.repeat(full)+(half?'½':'')+'☆'.repeat(empty);
+}
+
+// تحميل متوسط تقييمات جميع التطبيقات
+var _appRatings={};
+function loadAllRatings(){
+  var fb=window._fb; if(!fb)return;
+  var apps=loadApps();
+  apps.forEach(function(app,i){
+    fb.getDoc(fb.doc(fb.db,'ratings','app_'+i))
+      .then(function(snap){
+        if(snap.exists()){
+          _appRatings[i]=snap.data();
+          var ratingEl=document.querySelector('[data-index="'+i+'"] .stars-display');
+          var countEl =document.querySelector('[data-index="'+i+'"] .rating-count');
+          if(ratingEl)ratingEl.textContent=starsStr(_appRatings[i].avg||0);
+          if(countEl) countEl.textContent='('+(_appRatings[i].count||0)+')';
+        }
+      }).catch(function(){});
+  });
+}
+
+// ===================================================
+//  TOAST
+// ===================================================
+function showToast(msg){
+  var t=document.getElementById('toastMsg');
+  if(!t){
+    t=document.createElement('div');t.id='toastMsg';
+    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);'+
+      'background:var(--ink);color:white;padding:10px 20px;border-radius:50px;'+
+      'font-size:0.85rem;font-weight:600;z-index:9000;white-space:nowrap;'+
+      'box-shadow:0 4px 16px rgba(0,0,0,0.3);transition:opacity 0.3s;';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;t.style.opacity='1';t.style.display='block';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.style.display='none'},300)},2500);
+}
+
+// ===================================================
 //  INIT
 // ===================================================
 (function(){
@@ -1597,6 +2272,8 @@ function showBackupMsg(txt,color){
 })();
 rebuildFilterBar();
 renderGrid();
+// تحميل التقييمات بعد رسم الشبكة
+setTimeout(function(){if(window._fb)loadAllRatings()},1500);
 
 // ===================================================
 //  PWA — Service Worker Registration
