@@ -91,16 +91,23 @@
 <meta property="og:title"       content="رنيم فاي | التعلم الممتع">
 <meta property="og:description" content="تطبيقات تعليمية تفاعلية باللغة العربية للأطفال، وفق المنهج الجزائري.">
 <meta property="og:url"         content="https://fictional-lamp-lac.vercel.app/">
-<meta property="og:image"       content="https://fictional-lamp-lac.vercel.app/og-image.png">
+<meta property="og:image"       content="https://fictional-lamp-lac.vercel.app/og-image.jpg">
+<meta property="og:image:type"  content="image/jpeg">
 <meta property="og:image:width"  content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt"   content="رنيم فاي — منصة التعلم الممتع">
+<meta property="og:image:alt"   content="Raniim Fey — Fun Learning Platform">
+<meta property="og:image"       content="https://fictional-lamp-lac.vercel.app/og-image.png">
+<meta property="og:image:type"  content="image/png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt"   content="Raniim Fey — Fun Learning Platform">
 
 <!-- ===== Twitter Card ===== -->
 <meta name="twitter:card"        content="summary_large_image">
 <meta name="twitter:title"       content="رنيم فاي | التعلم الممتع">
 <meta name="twitter:description" content="تطبيقات تعليمية تفاعلية باللغة العربية للأطفال، وفق المنهج الجزائري.">
-<meta name="twitter:image"       content="https://fictional-lamp-lac.vercel.app/og-image.png">
+<meta name="twitter:image"       content="https://fictional-lamp-lac.vercel.app/og-image.jpg">
+<meta name="twitter:image:alt"  content="Raniim Fey — Fun Learning Platform">
 
 
 
@@ -827,8 +834,13 @@ textarea.form-inp{resize:none}
 
 <!-- تذييل -->
 <footer>
-  <div class="footer-brand">رنيم فاي — التعلم الممتع</div>
-  <div class="footer-copy">© 2026 Samira Abdessadok / رنيم فاي. جميع الحقوق محفوظة وفق القانون الجزائري 03-05.</div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+    <span class="footer-brand">Samira Abdessadok</span>
+    <span style="color:var(--border)">|</span>
+    <span class="footer-brand">Fun Learning</span>
+    <span style="color:var(--border)">|</span>
+    <span class="footer-copy">© 2026</span>
+  </div>
 </footer>
 
 <!-- معاينة التطبيق -->
@@ -1319,7 +1331,16 @@ var defaultApps=[
 // ===================================================
 //  STORAGE
 // ===================================================
-function loadApps(){try{var s=localStorage.getItem(STORE_KEY);return s?JSON.parse(s):JSON.parse(JSON.stringify(defaultApps))}catch(e){return JSON.parse(JSON.stringify(defaultApps))}}
+function loadApps(){
+  // إذا تم تحميل data.json الخارجي استخدمه كمصدر افتراضي
+  var base = window._externalApps || defaultApps;
+  try{
+    var s=localStorage.getItem(STORE_KEY);
+    return s ? JSON.parse(s) : JSON.parse(JSON.stringify(base));
+  }catch(e){
+    return JSON.parse(JSON.stringify(base));
+  }
+}
 function saveApps(a){localStorage.setItem(STORE_KEY,JSON.stringify(a))}
 function loadFavs(){try{var s=localStorage.getItem(FAV_KEY);return s?JSON.parse(s):{}}catch(e){return{}}}
 function saveFavs(o){localStorage.setItem(FAV_KEY,JSON.stringify(o))}
@@ -2272,7 +2293,26 @@ function showToast(msg){
 })();
 rebuildFilterBar();
 renderGrid();
-// تحميل التقييمات بعد رسم الشبكة
+// ===================================================
+//  تحميل data.json الخارجي
+// ===================================================
+(function loadExternalData(){
+  fetch('/data.json')
+    .then(function(r){ return r.json() })
+    .then(function(data){
+      if(Array.isArray(data) && data.length > 0){
+        window._externalApps = data;
+        // إذا لم يكن هناك بيانات محفوظة محلياً — أعد رسم الشبكة
+        if(!localStorage.getItem(STORE_KEY)){
+          renderGrid();
+        }
+        console.log('[data.json] loaded: '+data.length+' apps');
+      }
+    })
+    .catch(function(e){
+      console.warn('[data.json] not found — using defaultApps',e);
+    });
+})();
 setTimeout(function(){if(window._fb)loadAllRatings()},1500);
 
 // ===================================================
