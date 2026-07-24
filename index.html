@@ -1,0 +1,2352 @@
+<!DOCTYPE html>
+<!--
+================================================================
+  Project Name : التعليم الممتع | Fun Learning
+  Version      : CMS 2.3 — Teal Brand Identity
+  Developer    : Samira Abdessadok "رنيم فاي" | سميرة عبد الصّدوق
+  Date         : جويلية 2026
+  Copyright (c) 2026 Samira Abdessadok "رنيم فاي". All Rights Reserved.
+  ACKNOWLEDGMENT: Developed with AI as assistive tool only.
+================================================================
+-->
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="author" content="Samira Abdessadok / رنيم فاي">
+
+<!-- ===== SEO ===== -->
+<title>رنيم فاي | التعلم الممتع</title>
+<meta name="description" content="تطبيقات تعليمية تفاعلية باللغة العربية للأطفال من رياض الأطفال حتى الطور الابتدائي، وفق المنهج الجزائري — رنيم فاي">
+<meta name="keywords" content="تعليم, أطفال, عربية, جزائر, تطبيقات تعليمية, رنيم فاي, التعلم الممتع">
+
+<!-- ===== Firebase SDK ===== -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile }
+    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, orderBy, serverTimestamp, increment }
+    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  // ══ إعدادات Firebase — رنيم فاي ══
+  const firebaseConfig = {
+    apiKey:            "AIzaSyARoIE5BYqfqxSC9slARzOIznX7APa28_k",
+    authDomain:        "ranimfey-funlearning.firebaseapp.com",
+    projectId:         "ranimfey-funlearning",
+    storageBucket:     "ranimfey-funlearning.firebasestorage.app",
+    messagingSenderId: "138942779928",
+    appId:             "1:138942779928:web:4b9412024140b40436696d",
+    measurementId:     "G-24CGDXCE55"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // ── تصدير للاستخدام العام ──
+  window._fb = { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+    signOut, onAuthStateChanged, updateProfile,
+    doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, orderBy, serverTimestamp, increment };
+
+  // ── متابعة حالة المستخدم ──
+  onAuthStateChanged(auth, user => {
+    window._currentUser = user || null;
+    if(typeof updateAuthUI === 'function') updateAuthUI(user);
+    if(typeof renderGrid  === 'function') renderGrid();
+  });
+</script>
+
+
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1aab8a">
+<meta name="color-scheme" content="light dark">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- ===== Apple / iOS ===== -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="رنيم فاي">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icon-152.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/icon-144.png">
+<link rel="apple-touch-icon" sizes="128x128" href="/icon-128.png">
+<link rel="apple-touch-icon" sizes="96x96"   href="/icon-96.png">
+<link rel="apple-touch-icon" sizes="72x72"   href="/icon-72.png">
+
+<!-- ===== Favicon ===== -->
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="96x96"   href="/icon-96.png">
+<link rel="shortcut icon" href="/icon-96.png">
+
+<!-- ===== Microsoft / Windows ===== -->
+<meta name="msapplication-TileImage" content="/icon-144.png">
+<meta name="msapplication-TileColor" content="#1aab8a">
+<meta name="msapplication-config"    content="none">
+
+<!-- ===== Open Graph (Facebook / WhatsApp / Telegram) ===== -->
+<meta property="og:type"        content="website">
+<meta property="og:locale"      content="ar_DZ">
+<meta property="og:site_name"   content="رنيم فاي — التعلم الممتع">
+<meta property="og:title"       content="رنيم فاي | التعلم الممتع">
+<meta property="og:description" content="تطبيقات تعليمية تفاعلية باللغة العربية للأطفال، وفق المنهج الجزائري.">
+<meta property="og:url"         content="https://fun-learning-sam.vercel.app/">
+<meta property="og:image"       content="https://fun-learning-sam.vercel.app/og-image.jpg">
+<meta property="og:image:type"  content="image/jpeg">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt"   content="Raniim Fey — Fun Learning Platform">
+<meta property="og:image"       content="https://fun-learning-sam.vercel.app/og-image.png">
+<meta property="og:image:type"  content="image/png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt"   content="Raniim Fey — Fun Learning Platform">
+
+<!-- ===== Twitter Card ===== -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="رنيم فاي | التعلم الممتع">
+<meta name="twitter:description" content="تطبيقات تعليمية تفاعلية باللغة العربية للأطفال، وفق المنهج الجزائري.">
+<meta name="twitter:image"       content="https://fun-learning-sam.vercel.app/og-image.jpg">
+<meta name="twitter:image:alt"  content="Raniim Fey — Fun Learning Platform">
+
+
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ===== LIGHT THEME ===== */
+:root{
+  --ink:#1a2230; --ink-soft:#4e6070;
+  --paper:#f2f8f6; --surface:#ffffff;
+  --gold:#e07b2a; --gold-pale:#fef0e4;
+
+  /* Brand Teal — extracted from image gradient */
+  --teal:#1aab8a;
+  --teal-mid:#14977a;
+  --teal-dark:#0d8060;
+  --teal-pale:#e0f5ef;
+  --teal-pale2:#c4ecdf;
+
+  /* Brand gradient — used on header, buttons, accents */
+  --brand-grad: linear-gradient(120deg, #1aab8a 0%, #12977c 50%, #0d8060 100%);
+  --brand-grad-h: linear-gradient(120deg, #15997c 0%, #0e876e 50%, #0a7355 100%);
+
+  --border:#d0e8e0; --radius:14px;
+  --shadow:0 4px 24px rgba(26,171,138,0.14);
+  --shadow-hover:0 8px 32px rgba(26,171,138,0.24);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.16);
+
+  /* Card hover gradients — soft tints per subject */
+  --grad-arabic:  linear-gradient(135deg,#e8f7f2,#cfeee4);
+  --grad-math:    linear-gradient(135deg,#f0eeff,#ddd8f8);
+  --grad-games:   linear-gradient(135deg,#fff0fb,#f5d8f0);
+  --grad-tools:   linear-gradient(135deg,#eef3ff,#d8e4f8);
+  --grad-islamic: linear-gradient(135deg,#eafff4,#c4f0d8);
+  --grad-science: linear-gradient(135deg,#e8f4ff,#c5ddf5);
+  --grad-civic:   linear-gradient(135deg,#fffbe6,#f5e89a);
+  --grad-history: linear-gradient(135deg,#fff2e6,#f5d0a8);
+  --grad-geo:     linear-gradient(135deg,#eafff0,#c0f0c8);
+}
+
+/* ===== DARK THEME ===== */
+[data-theme="dark"]{
+  --ink:#e8eaf2; --ink-soft:#9099bb;
+  --paper:#12141f; --surface:#1c1f2e;
+  --gold:#f0943a; --gold-pale:#3a2810;
+  --teal:#25c48e; --teal-pale:#0d2e22; --teal-dark:#1da870;
+  --border:#2c3050;
+  --shadow:0 4px 24px rgba(0,0,0,0.4);
+  --shadow-hover:0 8px 32px rgba(0,0,0,0.5);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.6);
+  --grad-arabic:  linear-gradient(135deg,#1a2e2b,#0e201d);
+  --grad-math:    linear-gradient(135deg,#1e1a38,#16122a);
+  --grad-games:   linear-gradient(135deg,#2a1a28,#1e1020);
+  --grad-tools:   linear-gradient(135deg,#1a1e38,#10142a);
+  --grad-islamic: linear-gradient(135deg,#0e2a1a,#071a10);
+  --grad-science: linear-gradient(135deg,#0e1e2e,#07121e);
+  --grad-civic:   linear-gradient(135deg,#26220a,#1a1607);
+  --grad-history: linear-gradient(135deg,#281a0a,#1c1007);
+  --grad-geo:     linear-gradient(135deg,#0e260e,#071807);
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  background:var(--paper);color:var(--ink);min-height:100vh;
+  transition:background 0.3s,color 0.3s;
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.94)}to{opacity:1;transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){
+  .card,.hero-eyebrow,.hero h1,.hero p{animation:none!important;opacity:1!important;transform:none!important}
+}
+
+/* ===== HEADER ===== */
+header{
+  background:var(--brand-grad);
+  border-bottom:none;
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 16px rgba(13,128,96,0.25);
+  transition:background 0.3s;
+}
+[data-theme="dark"] header{
+  background:linear-gradient(120deg,#0e2a22 0%,#0a2018 100%);
+  box-shadow:0 2px 16px rgba(0,0,0,0.4);
+}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.logo-mark{
+  width:38px;height:38px;
+  background:rgba(255,255,255,0.18);
+  border:1.5px solid rgba(255,255,255,0.3);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:white;transition:transform 0.2s,background 0.2s;
+  backdrop-filter:blur(4px);
+}
+.logo:hover .logo-mark{background:rgba(255,255,255,0.26)}
+.logo:active .logo-mark{transform:scale(0.88)}
+.logo-text{display:flex;flex-direction:column;line-height:1.2}
+.logo-ar{font-size:0.97rem;font-weight:700;color:#ffffff;text-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.logo-sub{font-size:0.7rem;color:rgba(255,255,255,0.78)}
+
+/* dark mode toggle */
+.dark-toggle{
+  background:rgba(255,255,255,0.14);
+  border:1.5px solid rgba(255,255,255,0.28);
+  border-radius:50px;padding:6px 13px;cursor:pointer;
+  font-size:0.82rem;color:rgba(255,255,255,0.92);font-family:inherit;
+  display:flex;align-items:center;gap:6px;transition:all 0.25s;
+  white-space:nowrap;backdrop-filter:blur(4px);
+}
+.dark-toggle:hover{background:rgba(255,255,255,0.24);border-color:rgba(255,255,255,0.5)}
+
+/* ===== STICKY FILTERS ===== */
+.sticky-controls{
+  position:sticky;top:67px;z-index:150;
+  background:var(--paper);
+  border-bottom:1px solid var(--border);
+  border-top:2px solid var(--teal-pale2);
+  padding:10px 20px;transition:box-shadow 0.25s,background 0.3s;
+}
+[data-theme="dark"] .sticky-controls{border-top-color:var(--border)}
+.sticky-controls.scrolled{box-shadow:0 3px 14px rgba(13,128,96,0.1)}
+.search-wrap{position:relative;max-width:500px;margin:0 auto 10px}
+.search-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--ink-soft);pointer-events:none;font-size:0.9rem}
+#searchBar{
+  width:100%;padding:9px 38px 9px 14px;border:1.5px solid var(--border);border-radius:50px;
+  background:var(--surface);font-family:inherit;font-size:0.88rem;color:var(--ink);
+  outline:none;transition:border-color 0.2s,box-shadow 0.2s,background 0.3s;text-align:right;
+}
+#searchBar:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(26,171,138,0.15)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.filter-btn{
+  padding:5px 14px;
+  border:1px solid rgba(26,171,138,0.22);
+  border-radius:50px;
+  background:rgba(255,255,255,0.55);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  font-family:inherit;font-size:0.8rem;font-weight:500;
+  color:var(--ink-soft);cursor:pointer;
+  transition:all 0.25s;
+  box-shadow:0 1px 6px rgba(26,171,138,0.07), inset 0 1px 0 rgba(255,255,255,0.7);
+}
+.filter-btn:hover{
+  background:rgba(255,255,255,0.8);
+  border-color:rgba(26,171,138,0.5);
+  color:var(--teal);
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(26,171,138,0.14), inset 0 1px 0 rgba(255,255,255,0.9);
+}
+.filter-btn.active{
+  background:var(--brand-grad);
+  border-color:transparent;
+  color:white;
+  box-shadow:0 3px 14px rgba(26,171,138,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+[data-theme="dark"] .filter-btn{
+  background:rgba(28,31,46,0.55);
+  border-color:rgba(26,171,138,0.18);
+  box-shadow:0 1px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+[data-theme="dark"] .filter-btn:hover{
+  background:rgba(26,171,138,0.12);
+  border-color:rgba(26,171,138,0.4);
+}
+
+/* ===== HERO ===== */
+.hero{padding:40px 24px 28px;max-width:760px;margin:0 auto;text-align:center}
+.hero-eyebrow{
+  display:inline-block;font-size:0.78rem;font-weight:600;
+  color:#fff;background:var(--brand-grad);
+  padding:4px 16px;border-radius:20px;margin-bottom:14px;
+  animation:fadeUp 0.5s ease both;
+  box-shadow:0 2px 10px rgba(13,128,96,0.25);
+  letter-spacing:0.03em;
+}
+.hero h1{font-size:clamp(1.5rem,4.5vw,2.4rem);font-weight:700;color:var(--ink);line-height:1.4;margin-bottom:12px;animation:fadeUp 0.5s 0.08s ease both}
+.hero h1 span{color:var(--gold)}
+.hero p{font-size:0.95rem;font-weight:300;color:var(--ink-soft);line-height:1.8;max-width:540px;margin:0 auto;animation:fadeUp 0.5s 0.16s ease both}
+
+/* ===== GRID ===== */
+.grid-wrap{
+  padding:20px 20px 60px;max-width:960px;margin:0 auto;
+  position:relative;
+}
+/* طبقة تدرج خفية خلف البطاقات تعزز تأثير الزجاج */
+.grid-wrap::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(26,171,138,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(26,171,138,0.05) 0%, transparent 55%);
+  pointer-events:none;
+  z-index:0;
+}
+[data-theme="dark"] .grid-wrap::before{
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(26,171,138,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(13,128,96,0.05) 0%, transparent 55%);
+}
+.section-label{
+  font-size:0.75rem;font-weight:500;color:var(--ink-soft);
+  letter-spacing:0.06em;text-transform:uppercase;
+  margin-bottom:16px;padding-bottom:9px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;
+}
+.apps-count{font-size:0.73rem;color:#fff;background:var(--brand-grad);padding:3px 12px;border-radius:20px;letter-spacing:0;text-transform:none;box-shadow:0 1px 6px rgba(13,128,96,0.2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px;position:relative;z-index:1}
+
+/* ===== CARD ===== */
+.card{
+  background:rgba(255,255,255,0.65);
+  border:1px solid rgba(255,255,255,0.75);
+  border-radius:var(--radius);padding:18px;
+  display:flex;flex-direction:column;gap:9px;
+  position:relative;cursor:pointer;
+  opacity:0;animation:fadeUp 0.42s ease both;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:
+    0 2px 12px rgba(26,171,138,0.07),
+    0 1px 3px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  transition:box-shadow 0.28s,transform 0.28s,border-color 0.28s,background 0.28s,opacity 0.3s;
+  will-change:transform,box-shadow;
+}
+.card:hover{
+  transform:translateY(-5px) scale(1.016);
+  background:rgba(255,255,255,0.85);
+  border-color:rgba(26,171,138,0.25);
+  box-shadow:
+    0 8px 32px rgba(26,171,138,0.18),
+    0 2px 8px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+.card:active{transform:scale(0.985)}
+.card.done{
+  background:rgba(228,247,240,0.7);
+  border-color:rgba(26,171,138,0.3);
+}
+.card.done .card-title{text-decoration:line-through;color:var(--ink-soft)}
+
+[data-theme="dark"] .card{
+  background:rgba(28,31,46,0.55);
+  border-color:rgba(255,255,255,0.06);
+  box-shadow:
+    0 2px 12px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+[data-theme="dark"] .card:hover{
+  background:rgba(28,31,46,0.78);
+  border-color:rgba(26,171,138,0.22);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+[data-theme="dark"] .card.done{
+  background:rgba(13,46,34,0.55);
+  border-color:rgba(26,171,138,0.25);
+}
+
+/* per-category hover gradients */
+.card[data-cat="لغة عربية"]:hover   {background:var(--grad-arabic)}
+.card[data-cat="رياضيات"]:hover      {background:var(--grad-math)}
+.card[data-cat="ألعاب"]:hover        {background:var(--grad-games)}
+.card[data-cat="أدوات"]:hover        {background:var(--grad-tools)}
+.card[data-cat="إسلامية"]:hover      {background:var(--grad-islamic)}
+.card[data-cat="علوم"]:hover         {background:var(--grad-science)}
+.card[data-cat="تربية مدنية"]:hover  {background:var(--grad-civic)}
+.card[data-cat="تاريخ"]:hover        {background:var(--grad-history)}
+.card[data-cat="جغرافيا"]:hover      {background:var(--grad-geo)}
+
+/* dim siblings */
+.grid.has-focus .card{opacity:0.36;transform:scale(0.98)}
+.grid.has-focus .card.focused{opacity:1;transform:translateY(-4px) scale(1.015);box-shadow:var(--shadow-hover);border-color:transparent;z-index:2}
+
+/* card top actions */
+.card-actions-top{position:absolute;top:10px;left:10px;display:flex;gap:4px}
+.btn-fav,.btn-done-icon{
+  width:26px;height:26px;border-radius:50%;border:none;cursor:pointer;
+  font-size:13px;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;background:rgba(244,247,244,0.85);
+}
+[data-theme="dark"] .btn-fav,[data-theme="dark"] .btn-done-icon{background:rgba(28,31,46,0.85)}
+.btn-fav:hover{background:var(--gold-pale);transform:scale(1.15)}
+.btn-fav.active{background:var(--gold-pale);color:var(--gold)}
+.btn-done-icon:hover{background:var(--teal-pale);transform:scale(1.15)}
+.btn-done-icon.active{background:var(--teal-pale);color:var(--teal)}
+
+.card-top{display:flex;align-items:flex-start;gap:11px}
+.card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;transition:transform 0.25s}
+.card:hover .card-icon{transform:scale(1.12) rotate(-4deg)}
+.card-meta{display:flex;flex-direction:column;gap:3px;padding-top:2px}
+.card-badge{font-size:0.68rem;font-weight:500;padding:2px 7px;border-radius:20px;display:inline-block;width:fit-content}
+.card-title{font-size:0.94rem;font-weight:700;color:var(--ink);line-height:1.3}
+.card-desc{font-size:0.81rem;font-weight:300;color:var(--ink-soft);line-height:1.7;flex-grow:1}
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:9px;border-top:1px solid rgba(221,232,228,0.5);flex-wrap:wrap;gap:6px}
+[data-theme="dark"] .card-footer{border-top-color:rgba(44,48,80,0.7)}
+.card-age{font-size:0.71rem;color:var(--ink-soft)}
+.done-badge{display:none;font-size:0.7rem;background:#d4f5e5;color:var(--teal-dark);padding:2px 7px;border-radius:20px}
+.card.done .done-badge{display:inline-block}
+
+.btn-open{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 13px;background:var(--brand-grad);color:white;
+  border:none;border-radius:8px;font-family:inherit;font-size:0.8rem;font-weight:600;
+  cursor:pointer;transition:filter 0.2s,transform 0.15s,box-shadow 0.2s;
+  box-shadow:0 2px 8px rgba(13,128,96,0.22);
+}
+.btn-open:hover{filter:brightness(1.08);transform:scale(1.05);box-shadow:0 4px 14px rgba(13,128,96,0.32)}
+.btn-open.disabled{background:linear-gradient(120deg,#a0b0a8,#8899aa);pointer-events:none;cursor:default;box-shadow:none;filter:none}
+
+.empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--ink-soft)}
+.empty-state .emoji{font-size:2.4rem;margin-bottom:10px}
+
+/* ===== FOOTER ===== */
+footer{
+  background:var(--surface);
+  border-top:3px solid transparent;
+  border-image:var(--brand-grad) 1;
+  padding:22px 24px;text-align:center;transition:background 0.3s;
+}
+[data-theme="dark"] footer{border-image:none;border-top:1px solid var(--border)}
+.footer-brand{font-size:0.9rem;font-weight:700;color:var(--teal);margin-bottom:5px}
+.footer-copy{font-size:0.77rem;color:var(--ink-soft)}
+
+/* ===== PREVIEW MODAL ===== */
+#previewOverlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(10,14,28,0.65);z-index:500;
+  padding:18px 14px;overflow-y:auto;
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+}
+.preview-modal{
+  background:var(--surface);max-width:700px;margin:0 auto;
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 16px 60px rgba(0,0,0,0.3);
+  animation:scaleIn 0.26s ease both;
+}
+.preview-header{padding:14px 18px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--border)}
+.preview-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.preview-meta{flex:1}
+.preview-name{font-size:0.97rem;font-weight:700;color:var(--ink)}
+.preview-cat{font-size:0.73rem;color:var(--ink-soft)}
+.preview-close{background:var(--paper);border:none;color:var(--ink-soft);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.preview-close:hover{background:var(--border);color:var(--ink)}
+.preview-iframe-wrap{position:relative;width:100%;height:460px;background:var(--paper)}
+.preview-iframe-wrap iframe{width:100%;height:100%;border:none;display:block}
+.preview-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--paper);font-size:0.85rem;color:var(--ink-soft)}
+.spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin 0.7s linear infinite}
+.preview-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.preview-footer .age-tag{font-size:0.76rem;color:var(--ink-soft)}
+.btn-open-full{display:inline-flex;align-items:center;gap:5px;padding:7px 16px;background:var(--brand-grad);color:white;text-decoration:none;border-radius:9px;font-family:inherit;font-size:0.85rem;font-weight:600;transition:filter 0.2s;box-shadow:0 2px 8px rgba(13,128,96,0.22)}
+.btn-open-full:hover{filter:brightness(1.08)}
+.btn-close-preview{padding:7px 14px;background:var(--paper);color:var(--ink-soft);border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:0.82rem;cursor:pointer;transition:all 0.2s}
+.btn-close-preview:hover{border-color:var(--ink-soft)}
+
+/* ===== ADMIN OVERLAY ===== */
+#adminOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.58);z-index:1000;overflow-y:auto;padding:18px 14px}
+.admin-modal{background:var(--surface);max-width:580px;margin:0 auto;border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg);animation:scaleIn 0.24s ease both}
+.admin-header{background:var(--brand-grad);padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.admin-header span{color:white;font-size:0.97rem;font-weight:700}
+.admin-close{background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
+.admin-close:hover{background:rgba(255,255,255,0.35)}
+
+#adminLogin{padding:28px 22px;text-align:center}
+#adminLogin .lock-icon{font-size:2rem;margin-bottom:9px}
+#adminLogin p{color:var(--ink-soft);margin-bottom:16px;font-size:0.88rem}
+.inp{width:100%;padding:9px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.9rem;color:var(--ink);background:var(--surface);outline:none;margin-bottom:9px;text-align:center;transition:border-color 0.2s}
+.inp:focus{border-color:var(--teal)}
+.btn-primary{width:100%;padding:10px;background:var(--brand-grad);color:white;border:none;border-radius:8px;font-family:inherit;font-size:0.92rem;cursor:pointer;font-weight:600;transition:filter 0.2s;box-shadow:0 2px 10px rgba(13,128,96,0.25)}
+.btn-primary:hover{filter:brightness(1.08)}
+.err-msg{color:#e53e3e;font-size:0.8rem;margin-top:7px;display:none}
+
+#adminPanel{display:none;padding:18px}
+.tab-bar{display:flex;gap:3px;margin-bottom:16px;background:var(--paper);border-radius:10px;padding:3px}
+.tab-btn{flex:1;padding:7px 4px;border:none;background:none;border-radius:7px;font-family:inherit;font-size:0.76rem;font-weight:500;color:var(--ink-soft);cursor:pointer;transition:all 0.2s}
+.tab-btn.active{background:var(--surface);color:var(--teal);box-shadow:0 1px 4px rgba(0,0,0,0.1)}
+
+/* category chips */
+.cat-chip-builtin{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 11px;border-radius:20px;
+  font-size:0.76rem;font-weight:500;
+  background:var(--teal-pale);color:var(--teal);
+  border:1px solid var(--teal-pale2);
+}
+.cat-chip-custom{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:8px 12px;border-radius:10px;
+  background:var(--paper);border:1.5px solid var(--border);
+}
+.cat-chip-custom .chip-name{font-size:0.86rem;font-weight:600;color:var(--ink);flex:1}
+.cat-chip-custom .chip-count{font-size:0.73rem;color:var(--ink-soft);background:var(--border);padding:2px 8px;border-radius:10px}
+.btn-del-cat{
+  border:none;padding:4px 10px;border-radius:7px;cursor:pointer;
+  font-size:0.78rem;background:#fff0f0;color:#e53e3e;transition:all 0.2s;
+  font-family:inherit;white-space:nowrap;
+}
+[data-theme="dark"] .btn-del-cat{background:#3a1010;color:#f08080}
+.btn-del-cat:hover{background:#fdd;transform:scale(1.05)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+#adminAppList{display:flex;flex-direction:column;gap:6px;max-height:250px;overflow-y:auto;padding-right:3px}
+.admin-app-row{display:flex;align-items:center;gap:7px;padding:7px 9px;background:var(--paper);border-radius:8px}
+.row-icon{font-size:0.97rem}
+.row-name{flex:1;font-size:0.84rem;color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-cat{font-size:0.71rem;color:var(--ink-soft);background:var(--border);padding:2px 7px;border-radius:10px}
+.btn-edit-row,.btn-del-row{border:none;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.76rem}
+.btn-edit-row{background:var(--teal-pale);color:var(--teal)}
+.btn-del-row{background:#fff0f0;color:#e53e3e}
+[data-theme="dark"] .btn-del-row{background:#3a1010}
+
+/* ===== AUTH BUTTON IN HEADER ===== */
+.auth-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 14px;border-radius:50px;border:1.5px solid rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.15);color:white;font-family:inherit;
+  font-size:0.82rem;font-weight:600;cursor:pointer;
+  transition:all 0.22s;backdrop-filter:blur(4px);white-space:nowrap;
+}
+.auth-btn:hover{background:rgba(255,255,255,0.28);border-color:rgba(255,255,255,0.5)}
+.auth-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+
+/* ===== AUTH MODAL ===== */
+#authOverlay{display:none;position:fixed;inset:0;background:rgba(10,14,28,0.65);z-index:700;
+  padding:20px 16px;overflow-y:auto;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.auth-modal{background:var(--surface);max-width:420px;margin:60px auto;border-radius:20px;
+  overflow:hidden;box-shadow:0 16px 60px rgba(0,0,0,0.28);animation:scaleIn 0.26s ease both}
+.auth-modal-header{background:var(--brand-grad);padding:22px 22px 18px;text-align:center}
+.auth-modal-header .auth-logo{font-size:2rem;margin-bottom:6px}
+.auth-modal-header h3{color:white;font-size:1rem;font-weight:700;margin:0}
+.auth-tabs{display:flex;border-bottom:1px solid var(--border)}
+.auth-tab{flex:1;padding:12px;border:none;background:none;font-family:inherit;
+  font-size:0.88rem;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent}
+.auth-tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.auth-body{padding:22px 20px}
+.auth-field{margin-bottom:12px}
+.auth-field label{display:block;font-size:0.8rem;font-weight:600;color:var(--ink-soft);margin-bottom:5px}
+.auth-field input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;
+  font-family:inherit;font-size:0.9rem;color:var(--ink);background:var(--surface);
+  outline:none;transition:border-color 0.2s}
+.auth-field input:focus{border-color:var(--teal)}
+.btn-auth{width:100%;padding:11px;background:var(--brand-grad);color:white;border:none;
+  border-radius:9px;font-family:inherit;font-size:0.92rem;font-weight:700;cursor:pointer;
+  transition:filter 0.2s;margin-top:4px;box-shadow:0 3px 12px rgba(26,171,138,0.3)}
+.btn-auth:hover{filter:brightness(1.08)}
+.auth-err{color:#e53e3e;font-size:0.8rem;margin-top:8px;text-align:center;display:none}
+.auth-close{position:absolute;top:14px;left:14px;background:rgba(255,255,255,0.2);
+  border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;
+  font-size:1rem;display:flex;align-items:center;justify-content:center}
+
+/* ===== JOURNEY PAGE ===== */
+#journeyPage{display:none;position:fixed;inset:0;background:var(--paper);z-index:400;overflow-y:auto}
+.journey-header{background:var(--brand-grad);padding:20px 22px;display:flex;align-items:center;gap:12px}
+.journey-back{background:rgba(255,255,255,0.2);border:none;color:white;width:36px;height:36px;
+  border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center}
+.journey-title{color:white;font-size:1rem;font-weight:700}
+.journey-body{max-width:700px;margin:0 auto;padding:24px 20px}
+
+/* stats */
+.journey-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border-radius:14px;padding:16px;text-align:center;
+  border:1px solid var(--border);box-shadow:0 2px 8px rgba(26,171,138,0.07)}
+.stat-num{font-size:1.8rem;font-weight:800;color:var(--teal);margin-bottom:2px}
+.stat-lbl{font-size:0.75rem;color:var(--ink-soft)}
+
+/* badges */
+.badges-section{margin-bottom:24px}
+.badges-title{font-size:0.85rem;font-weight:700;color:var(--ink);margin-bottom:12px}
+.badges-grid{display:flex;flex-wrap:wrap;gap:10px}
+.badge-item{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);
+  background:var(--surface);font-size:1.4rem;min-width:70px;
+}
+.badge-item.earned{border-color:var(--gold);background:var(--gold-pale)}
+.badge-item.locked{opacity:0.4;filter:grayscale(1)}
+.badge-lbl{font-size:0.68rem;color:var(--ink-soft);text-align:center}
+
+/* completed apps */
+.completed-title{font-size:0.85rem;font-weight:700;color:var(--ink);margin-bottom:12px}
+.completed-list{display:flex;flex-direction:column;gap:8px}
+.completed-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--surface);border-radius:10px;
+  border:1px solid var(--border);
+}
+.completed-icon{font-size:1.2rem}
+.completed-name{flex:1;font-size:0.86rem;font-weight:600;color:var(--ink)}
+.completed-date{font-size:0.72rem;color:var(--ink-soft)}
+
+/* ===== RATINGS ON CARDS ===== */
+.card-rating{display:flex;align-items:center;gap:4px;margin-top:2px}
+.stars-display{color:#f5a623;font-size:0.8rem;letter-spacing:-1px}
+.rating-count{font-size:0.72rem;color:var(--ink-soft)}
+
+/* rating modal */
+#ratingOverlay{display:none;position:fixed;inset:0;background:rgba(10,14,28,0.6);z-index:550;
+  padding:20px 16px;overflow-y:auto;backdrop-filter:blur(6px)}
+.rating-modal{background:var(--surface);max-width:400px;margin:80px auto;border-radius:18px;
+  overflow:hidden;box-shadow:0 12px 50px rgba(0,0,0,0.25);animation:scaleIn 0.24s ease both}
+.rating-modal-header{background:var(--brand-grad);padding:16px 20px;display:flex;
+  justify-content:space-between;align-items:center}
+.rating-modal-header span{color:white;font-weight:700;font-size:0.95rem}
+.rating-body{padding:20px}
+.rating-app-name{font-size:0.92rem;font-weight:700;color:var(--ink);text-align:center;
+  margin-bottom:16px;padding:10px;background:var(--paper);border-radius:8px}
+.stars-input{display:flex;justify-content:center;gap:8px;margin-bottom:16px}
+.star-btn{font-size:2rem;background:none;border:none;cursor:pointer;
+  transition:transform 0.15s;color:#ddd;line-height:1}
+.star-btn.active{color:#f5a623}
+.star-btn:hover{transform:scale(1.2)}
+.rating-comment{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;
+  font-family:inherit;font-size:0.86rem;color:var(--ink);background:var(--surface);
+  outline:none;resize:none;margin-bottom:12px;transition:border-color 0.2s}
+.rating-comment:focus{border-color:var(--teal)}
+.btn-submit-rating{width:100%;padding:10px;background:var(--brand-grad);color:white;border:none;
+  border-radius:9px;font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;
+  transition:filter 0.2s}
+.btn-submit-rating:hover{filter:brightness(1.08)}
+.rating-success{color:var(--teal);font-size:0.82rem;text-align:center;margin-top:8px;display:none}
+
+/* reviews list */
+.reviews-list{margin-top:14px;display:flex;flex-direction:column;gap:8px;
+  max-height:200px;overflow-y:auto}
+.review-item{background:var(--paper);border-radius:8px;padding:10px 12px}
+.review-top{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.review-stars{color:#f5a623;font-size:0.78rem}
+.review-name{font-size:0.75rem;font-weight:600;color:var(--ink-soft)}
+.review-text{font-size:0.82rem;color:var(--ink);line-height:1.5}
+
+/* ===== COMPLETE BTN ON CARD ===== */
+.btn-complete{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:5px 10px;border:1.5px solid rgba(26,171,138,0.3);
+  border-radius:20px;background:transparent;
+  font-family:inherit;font-size:0.73rem;font-weight:600;
+  color:var(--teal);cursor:pointer;transition:all 0.2s;
+}
+.btn-complete:hover{background:var(--teal-pale);border-color:var(--teal)}
+.btn-complete.completed-btn{background:var(--teal);color:white;border-color:var(--teal)}
+.filter-paid-btn{border-color:rgba(224,123,42,0.35)!important;color:var(--gold)!important;background:rgba(254,240,228,0.7)!important}
+.filter-paid-btn:hover,.filter-paid-btn.active{background:linear-gradient(120deg,#e07b2a,#c96010)!important;border-color:transparent!important;color:white!important;box-shadow:0 3px 14px rgba(224,123,42,0.4)!important}
+[data-theme="dark"] .filter-paid-btn{background:rgba(58,32,8,0.6)!important;border-color:rgba(224,123,42,0.3)!important}
+.filter-free-btn{border-color:rgba(26,171,138,0.3)!important;color:var(--teal)!important;background:rgba(228,247,240,0.7)!important}
+.filter-free-btn:hover,.filter-free-btn.active{background:var(--brand-grad)!important;border-color:transparent!important;color:white!important}
+
+/* ===== STATUS BUTTONS (free / paid / unlocked / soon) ===== */
+.card-footer-btns{display:flex;align-items:center;gap:6px;flex-shrink:0}
+
+.btn-status{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:5px 11px;border:none;border-radius:20px;
+  font-family:inherit;font-size:0.75rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;
+  letter-spacing:0.01em;
+}
+
+/* مجاني — أخضر */
+.btn-free-status{
+  background:var(--teal-pale);color:var(--teal-dark);
+  border:1px solid rgba(26,171,138,0.25);
+  cursor:default;
+}
+[data-theme="dark"] .btn-free-status{background:rgba(13,46,34,0.7);color:#4dd4a8;border-color:rgba(26,171,138,0.2)}
+
+/* مدفوع — ذهبي */
+.btn-paid-status{
+  background:linear-gradient(120deg,#e07b2a,#c96010);
+  color:white;
+  box-shadow:0 2px 8px rgba(224,123,42,0.3);
+}
+.btn-paid-status:hover{filter:brightness(1.1);transform:scale(1.04);box-shadow:0 3px 12px rgba(224,123,42,0.45)}
+
+/* مفتوح (مدفوع وتم إدخال السر) — أخضر داكن */
+.btn-unlocked-status{
+  background:linear-gradient(120deg,var(--teal),var(--teal-dark));
+  color:white;
+  box-shadow:0 2px 8px rgba(26,171,138,0.28);
+}
+.btn-unlocked-status:hover{filter:brightness(1.08);transform:scale(1.04)}
+
+/* قريباً — رمادي */
+.btn-soon{
+  background:var(--paper);color:var(--ink-soft);
+  border:1px solid var(--border);
+  cursor:default;opacity:0.7;
+}
+
+/* بطاقة مدفوعة — إطار ذهبي خفيف */
+.card.paid-card{border-color:rgba(224,123,42,0.22)!important}
+.card.paid-card::after{content:'💎';position:absolute;top:10px;right:10px;font-size:13px;pointer-events:none;opacity:0.7}
+.btn-open.paid-btn{background:linear-gradient(120deg,#e07b2a,#c96010)!important;box-shadow:0 2px 8px rgba(224,123,42,0.28)!important}
+.btn-open.paid-btn:hover{filter:brightness(1.1)!important}
+#unlockOverlay{display:none;position:fixed;inset:0;background:rgba(10,14,28,0.7);z-index:600;padding:20px 16px;overflow-y:auto;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.unlock-modal{background:var(--surface);max-width:400px;margin:80px auto;border-radius:20px;overflow:hidden;box-shadow:0 16px 60px rgba(0,0,0,0.3);animation:scaleIn 0.26s ease both;border:1px solid rgba(224,123,42,0.2)}
+.unlock-header{background:linear-gradient(120deg,#e07b2a,#c96010);padding:20px 22px;text-align:center}
+.unlock-header .lock-big{font-size:2rem;margin-bottom:5px}
+.unlock-header h3{color:white;font-size:1rem;font-weight:700;margin:0}
+.unlock-header p{color:rgba(255,255,255,0.85);font-size:0.8rem;margin-top:4px}
+.unlock-body{padding:22px 20px}
+.unlock-app-name{font-size:0.9rem;font-weight:700;color:var(--ink);text-align:center;margin-bottom:16px;padding:10px 14px;background:var(--paper);border-radius:10px;border-right:3px solid var(--gold)}
+.btn-unlock{width:100%;padding:10px;background:linear-gradient(120deg,#e07b2a,#c96010);color:white;border:none;border-radius:9px;font-family:inherit;font-size:0.92rem;font-weight:700;cursor:pointer;transition:filter 0.2s;box-shadow:0 3px 12px rgba(224,123,42,0.3)}
+.btn-unlock:hover{filter:brightness(1.08)}
+.unlock-err{color:#e53e3e;font-size:0.8rem;text-align:center;margin-top:7px;display:none}
+.btn-unlock-cancel{width:100%;margin-top:8px;padding:9px;background:none;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:0.86rem;color:var(--ink-soft);cursor:pointer;transition:border-color 0.2s}
+.btn-unlock-cancel:hover{border-color:var(--ink-soft)}
+
+.form-grid{display:flex;flex-direction:column;gap:8px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.form-inp{padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.84rem;color:var(--ink);background:var(--surface);outline:none;transition:border-color 0.2s;width:100%}
+.form-inp:focus{border-color:var(--teal)}
+select.form-inp{background:var(--surface)}
+textarea.form-inp{resize:none}
+.form-actions{display:flex;gap:7px;margin-top:3px}
+.btn-save{flex:1;padding:9px;background:var(--brand-grad);color:white;border:none;border-radius:8px;font-family:inherit;font-size:0.88rem;cursor:pointer;font-weight:600;transition:filter 0.2s;box-shadow:0 2px 8px rgba(13,128,96,0.2)}
+.btn-save:hover{filter:brightness(1.08)}
+.btn-cancel{padding:9px 14px;background:var(--paper);color:var(--ink-soft);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.88rem;cursor:pointer}
+.form-msg{font-size:0.8rem;text-align:center;display:none;margin-top:5px}
+
+.backup-section{display:flex;flex-direction:column;gap:9px}
+.backup-card{background:var(--paper);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px}
+.bc-icon{font-size:1.4rem}
+.bc-info{flex:1}
+.bc-title{font-size:0.86rem;font-weight:600;color:var(--ink);margin-bottom:2px}
+.bc-desc{font-size:0.76rem;color:var(--ink-soft)}
+.btn-backup{padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;font-size:0.82rem;font-weight:500;transition:all 0.2s;white-space:nowrap}
+.btn-export{background:var(--gold-pale);color:var(--gold)}
+.btn-export:hover{filter:brightness(0.92)}
+.btn-import{background:var(--teal-pale);color:var(--teal)}
+.btn-import:hover{filter:brightness(0.92)}
+.btn-reset{background:#fff0f0;color:#e53e3e}
+[data-theme="dark"] .btn-reset{background:#3a1010;color:#f08080}
+.btn-reset:hover{filter:brightness(1.1)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+  header{padding:12px 14px}
+  .hero{padding:28px 14px 20px}
+  .grid-wrap{padding:14px 14px 48px}
+  .sticky-controls{padding:9px 14px}
+  .grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  #adminOverlay,#previewOverlay{padding:10px 6px}
+  .preview-iframe-wrap{height:340px}
+  .dark-toggle span.toggle-label{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ترويسة -->
+<header>
+  <div class="logo" id="logoTrigger">
+    <div class="logo-mark">✦</div>
+    <div class="logo-text">
+      <span class="logo-ar">رنيم فاي</span>
+      <span class="logo-sub">التعلم الممتع</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <!-- زر رحلتي — يظهر فقط عند تسجيل الدخول -->
+    <button id="journeyBtn" onclick="openJourney()" style="display:none"
+      class="auth-btn" title="رحلتي">
+      🏆 <span class="toggle-label">رحلتي</span>
+    </button>
+    <!-- زر المستخدم -->
+    <button class="auth-btn" id="authHeaderBtn" onclick="openAuth()">
+      <span class="auth-avatar" id="authAvatarIcon">👤</span>
+      <span class="toggle-label" id="authHeaderLabel">دخول</span>
+    </button>
+    <!-- زر الليل -->
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="تبديل الوضع">
+      <span id="darkIcon">🌙</span>
+    </button>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <span class="hero-eyebrow">مكتبة التطبيقات التعليمية</span>
+  <h1>تعلّم اليوم بطريقة <span>ممتعة</span></h1>
+  <p>مشروع تعليمي رقمي مستقل، يُقدّم تطبيقات تفاعلية باللغة العربية للمتعلمين من رياض الأطفال حتى الطور الابتدائي، وفق المنهج الجزائري.</p>
+</section>
+
+<!-- فلاتر -->
+<div class="sticky-controls" id="stickyControls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchBar" placeholder="ابحث عن تطبيق..." oninput="filterApps()">
+  </div>
+  <div class="filters" id="filtersBar">
+    <button class="filter-btn active" onclick="filterCategory('all',this)">الكل</button>
+    <button class="filter-btn" onclick="filterCategory('لغة عربية',this)">لغة عربية</button>
+    <button class="filter-btn" onclick="filterCategory('رياضيات',this)">رياضيات</button>
+    <button class="filter-btn" onclick="filterCategory('إسلامية',this)">🕌 إسلامية</button>
+    <button class="filter-btn" onclick="filterCategory('علوم',this)">🔬 علوم</button>
+    <button class="filter-btn" onclick="filterCategory('تربية مدنية',this)">🏛️ مدنية</button>
+    <button class="filter-btn" onclick="filterCategory('تاريخ',this)">📜 تاريخ</button>
+    <button class="filter-btn" onclick="filterCategory('جغرافيا',this)">🗺️ جغرافيا</button>
+    <button class="filter-btn" onclick="filterCategory('ألعاب',this)">🎮 ألعاب</button>
+    <button class="filter-btn" onclick="filterCategory('أدوات',this)">أدوات</button>
+  </div>
+</div>
+
+<!-- شبكة البطاقات -->
+<div class="grid-wrap">
+  <div class="section-label">
+    <span>جميع التطبيقات</span>
+    <span class="apps-count" id="appsCount">0 تطبيق</span>
+  </div>
+  <div class="grid" id="appGrid"></div>
+</div>
+
+<!-- تذييل -->
+<footer>
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+    <span class="footer-brand">Samira Abdessadok</span>
+    <span style="color:var(--border)">|</span>
+    <span class="footer-brand">Fun Learning</span>
+    <span style="color:var(--border)">|</span>
+    <span class="footer-copy">© 2026</span>
+  </div>
+</footer>
+
+<!-- معاينة التطبيق -->
+<div id="previewOverlay">
+  <div class="preview-modal">
+    <div class="preview-header">
+      <div class="preview-icon" id="prevIcon"></div>
+      <div class="preview-meta">
+        <div class="preview-name" id="prevName"></div>
+        <div class="preview-cat" id="prevCat"></div>
+      </div>
+      <button class="preview-close" onclick="closePreview()">✕</button>
+    </div>
+    <div class="preview-iframe-wrap">
+      <div class="preview-loader" id="prevLoader"><div class="spinner"></div><span>جارٍ التحميل…</span></div>
+      <iframe id="prevFrame" title="معاينة" sandbox="allow-scripts allow-same-origin allow-forms" ></iframe>
+    </div>
+    <div class="preview-footer">
+      <span class="age-tag" id="prevAge"></span>
+      <div style="display:flex;gap:7px">
+        <button class="btn-close-preview" onclick="closePreview()">إغلاق</button>
+        <a id="prevOpenFull" href="#" target="_blank" class="btn-open-full">فتح كاملاً ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== نافذة فك قفل التطبيق المدفوع ===== -->
+<div id="unlockOverlay">
+  <div class="unlock-modal">
+    <div class="unlock-header">
+      <div class="lock-big">💎🔐</div>
+      <h3>تطبيق مدفوع</h3>
+      <p>أدخلي كلمة السر للوصول إلى هذا التطبيق</p>
+    </div>
+    <div class="unlock-body">
+      <div class="unlock-app-name" id="unlockAppName"></div>
+      <input type="password" id="unlockPass" class="inp"
+        placeholder="كلمة سر التطبيق"
+        onkeydown="if(event.key==='Enter')tryUnlock()"
+        style="margin-bottom:10px">
+      <button class="btn-unlock" onclick="tryUnlock()">🔓 فتح التطبيق</button>
+      <p id="unlockErr" class="unlock-err">❌ كلمة السر غير صحيحة</p>
+      <button class="btn-unlock-cancel" onclick="closeUnlock()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== نافذة تسجيل الدخول / إنشاء حساب ===== -->
+<div id="authOverlay">
+  <div class="auth-modal" style="position:relative">
+    <div class="auth-modal-header">
+      <button class="auth-close" onclick="closeAuth()">✕</button>
+      <div class="auth-logo">✦</div>
+      <h3>رنيم فاي | التعلم الممتع</h3>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin"  onclick="switchAuthTab('login')">دخول</button>
+      <button class="auth-tab"        id="tabSignup" onclick="switchAuthTab('signup')">حساب جديد</button>
+    </div>
+    <div class="auth-body">
+      <!-- تسجيل دخول -->
+      <div id="loginForm">
+        <div class="auth-field">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="loginEmail" placeholder="example@email.com">
+        </div>
+        <div class="auth-field">
+          <label>كلمة السر</label>
+          <input type="password" id="loginPass" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <button class="btn-auth" onclick="doLogin()">🔓 دخول</button>
+        <p id="loginErr" class="auth-err"></p>
+      </div>
+      <!-- إنشاء حساب -->
+      <div id="signupForm" style="display:none">
+        <div class="auth-field">
+          <label>الاسم</label>
+          <input type="text" id="signupName" placeholder="اسمك">
+        </div>
+        <div class="auth-field">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="signupEmail" placeholder="example@email.com">
+        </div>
+        <div class="auth-field">
+          <label>كلمة السر</label>
+          <input type="password" id="signupPass" placeholder="6 أحرف على الأقل"
+            onkeydown="if(event.key==='Enter')doSignup()">
+        </div>
+        <button class="btn-auth" onclick="doSignup()">✅ إنشاء حساب</button>
+        <p id="signupErr" class="auth-err"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== صفحة رحلتي ===== -->
+<div id="journeyPage">
+  <div class="journey-header">
+    <button class="journey-back" onclick="closeJourney()">←</button>
+    <span class="journey-title">🏆 رحلتي في التعلم</span>
+  </div>
+  <div class="journey-body">
+    <!-- إحصائيات -->
+    <div class="journey-stats">
+      <div class="stat-card">
+        <div class="stat-num" id="statCompleted">0</div>
+        <div class="stat-lbl">تطبيق مكتمل</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statPoints">0</div>
+        <div class="stat-lbl">نقطة</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statBadges">0</div>
+        <div class="stat-lbl">شارة</div>
+      </div>
+    </div>
+    <!-- شارات الإنجاز -->
+    <div class="badges-section">
+      <div class="badges-title">🎖️ شاراتي</div>
+      <div class="badges-grid" id="badgesGrid"></div>
+    </div>
+    <!-- التطبيقات المكتملة -->
+    <div>
+      <div class="completed-title">📚 التطبيقات المكتملة</div>
+      <div class="completed-list" id="completedList">
+        <p style="color:var(--ink-soft);font-size:0.85rem;text-align:center;padding:20px">
+          لم تكملي أي تطبيق بعد — ابدئي الآن! 🚀
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== نافذة التقييم ===== -->
+<div id="ratingOverlay">
+  <div class="rating-modal">
+    <div class="rating-modal-header">
+      <span>⭐ تقييم التطبيق</span>
+      <button onclick="closeRating()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:0.9rem">✕</button>
+    </div>
+    <div class="rating-body">
+      <div class="rating-app-name" id="ratingAppName"></div>
+      <!-- نجوم الإدخال -->
+      <div class="stars-input" id="starsInput">
+        <button class="star-btn" data-val="1" onclick="selectStar(1)">★</button>
+        <button class="star-btn" data-val="2" onclick="selectStar(2)">★</button>
+        <button class="star-btn" data-val="3" onclick="selectStar(3)">★</button>
+        <button class="star-btn" data-val="4" onclick="selectStar(4)">★</button>
+        <button class="star-btn" data-val="5" onclick="selectStar(5)">★</button>
+      </div>
+      <textarea class="rating-comment" id="ratingComment"
+        placeholder="اكتبي تعليقك (اختياري)..." rows="3"></textarea>
+      <button class="btn-submit-rating" onclick="submitRating()">إرسال التقييم</button>
+      <p id="ratingSuccess" class="rating-success">✅ شكراً على تقييمك!</p>
+      <!-- عرض التقييمات -->
+      <div class="reviews-list" id="reviewsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- لوحة التحكم -->
+<div id="adminOverlay">
+  <div class="admin-modal">
+    <div class="admin-header">
+      <span>⚙️ لوحة تحكم رنيم فاي</span>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div id="adminLogin">
+      <div class="lock-icon">🔒</div>
+      <p>أدخلي كلمة السر للوصول إلى لوحة التحكم</p>
+      <input type="password" id="adminPass" class="inp" placeholder="كلمة السر" onkeydown="if(event.key==='Enter')checkPass()">
+      <button class="btn-primary" onclick="checkPass()">دخول</button>
+      <p id="passError" class="err-msg">❌ كلمة السر غير صحيحة</p>
+    </div>
+    <div id="adminPanel">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('list',this)">📋 التطبيقات</button>
+        <button class="tab-btn" onclick="switchTab('form',this)">✏️ إضافة / تعديل</button>
+        <button class="tab-btn" onclick="switchTab('cats',this)">🏷️ التصنيفات</button>
+        <button class="tab-btn" onclick="switchTab('backup',this)">💾 نسخ احتياطي</button>
+      </div>
+      <!-- قائمة -->
+      <div id="tab-list" class="tab-content active">
+        <div id="adminAppList"></div>
+      </div>
+      <!-- نموذج -->
+      <div id="tab-form" class="tab-content">
+        <div style="font-weight:700;color:var(--ink);margin-bottom:11px;font-size:0.9rem" id="formTitle">➕ إضافة تطبيق جديد</div>
+        <input type="hidden" id="editIndex" value="-1">
+        <div class="form-grid">
+          <input id="fName" class="form-inp" placeholder="اسم التطبيق *">
+          <textarea id="fDesc" class="form-inp" placeholder="وصف مختصر *" rows="2"></textarea>
+          <input id="fUrl" class="form-inp" placeholder="رابط التطبيق (https://...)">
+          <div class="form-row">
+            <select id="fCat" class="form-inp" onchange="onCatChange(this)">
+              <option value="">-- التصنيف --</option>
+              <option value="لغة عربية">لغة عربية</option>
+              <option value="رياضيات">رياضيات</option>
+              <option value="إسلامية">إسلامية</option>
+              <option value="علوم">علوم</option>
+              <option value="تربية مدنية">تربية مدنية</option>
+              <option value="تاريخ">تاريخ</option>
+              <option value="جغرافيا">جغرافيا</option>
+              <option value="ألعاب">ألعاب</option>
+              <option value="أدوات">أدوات</option>
+              <option value="__new__">➕ تصنيف جديد...</option>
+            </select>
+            <input id="fAge" class="form-inp" placeholder="الفئة العمرية">
+          </div>
+          <!-- حقل التصنيف المخصص — يظهر فقط عند اختيار "تصنيف جديد" -->
+          <div id="customCatWrap" style="display:none;position:relative">
+            <input id="fCatCustom" class="form-inp" placeholder="اكتبي اسم التصنيف الجديد *"
+              style="padding-left:36px"
+              oninput="previewCustomCat(this.value)">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:0.8rem;color:var(--teal)">✦</span>
+            <div id="customCatHint" style="font-size:0.74rem;color:var(--teal);margin-top:4px;display:none"></div>
+          </div>
+          <input id="fIcon" class="form-inp" placeholder="أيقونة (إيموجي مثل 📖)">
+          <!-- حقل المدفوع -->
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--paper);border-radius:9px;border:1.5px solid var(--border)">
+            <input type="checkbox" id="fPaid" onchange="togglePaidFields(this)"
+              style="width:18px;height:18px;accent-color:var(--gold);cursor:pointer;flex-shrink:0">
+            <label for="fPaid" style="font-size:0.86rem;font-weight:600;color:var(--ink);cursor:pointer;flex:1">
+              💎 تطبيق مدفوع (يتطلب كلمة سر)
+            </label>
+          </div>
+          <div id="paidPassWrap" style="display:none">
+            <input id="fPaidPass" class="form-inp" type="text"
+              placeholder="كلمة السر الخاصة بهذا التطبيق *"
+              style="letter-spacing:0.06em">
+            <div style="font-size:0.73rem;color:var(--ink-soft);margin-top:4px;padding-right:4px">
+              ⚠️ كلمة سر مستقلة لكل تطبيق — تُعطى للمشترك فقط
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-save" onclick="saveApp()">💾 حفظ</button>
+            <button class="btn-cancel" onclick="resetForm()">إلغاء</button>
+          </div>
+          <p id="formMsg" class="form-msg"></p>
+        </div>
+      </div>
+      <!-- إدارة التصنيفات -->
+      <div id="tab-cats" class="tab-content">
+        <div style="margin-bottom:12px">
+          <div style="font-size:0.82rem;color:var(--ink-soft);margin-bottom:10px;line-height:1.6">
+            التصنيفات المدمجة لا يمكن حذفها. يمكنك حذف التصنيفات المخصصة فقط.
+            <br>⚠️ حذف تصنيف لن يحذف بطاقاته، لكن ستفقد زر الفلتر الخاص به.
+          </div>
+          <!-- تصنيفات مدمجة -->
+          <div style="font-weight:600;color:var(--ink);font-size:0.84rem;margin-bottom:7px">🔒 التصنيفات المدمجة</div>
+          <div id="builtinCatList" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
+          <!-- تصنيفات مخصصة -->
+          <div style="font-weight:600;color:var(--ink);font-size:0.84rem;margin-bottom:7px">📌 تصنيفاتك المخصصة</div>
+          <div id="customCatList" style="display:flex;flex-direction:column;gap:7px"></div>
+          <p id="catsMsg" style="font-size:0.8rem;text-align:center;display:none;margin-top:10px"></p>
+        </div>
+      </div>
+      <!-- نسخ احتياطي -->
+      <div id="tab-backup" class="tab-content">
+        <div class="backup-section">
+          <div class="backup-card">
+            <span class="bc-icon">📤</span>
+            <div class="bc-info"><div class="bc-title">تصدير البيانات</div><div class="bc-desc">تحميل كافة البيانات كملف JSON</div></div>
+            <button class="btn-backup btn-export" onclick="exportData()">تصدير</button>
+          </div>
+          <div class="backup-card">
+            <span class="bc-icon">📥</span>
+            <div class="bc-info"><div class="bc-title">استيراد البيانات</div><div class="bc-desc">استبدال البيانات بملف JSON محفوظ</div></div>
+            <button class="btn-backup btn-import" onclick="document.getElementById('importFile').click()">استيراد</button>
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+          </div>
+          <div class="backup-card">
+            <span class="bc-icon">🔄</span>
+            <div class="bc-info"><div class="bc-title">استعادة الافتراضي</div><div class="bc-desc">العودة إلى القائمة الأصلية</div></div>
+            <button class="btn-backup btn-reset" onclick="resetToDefault()">استعادة</button>
+          </div>
+          <p id="backupMsg" style="font-size:0.8rem;text-align:center;display:none;margin-top:4px"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================================================
+//  CONFIG
+// ===================================================
+var ADMIN_PASS='رنيم2026';
+var STORE_KEY='ranimfay_apps_v2';
+var FAV_KEY='ranimfay_favs';
+var DONE_KEY='ranimfay_done';
+var DARK_KEY='ranimfay_dark';
+var CATS_KEY='ranimfay_custom_cats';
+var UNLOCKED_KEY='ranimfay_unlocked'; // مفاتيح التطبيقات التي فُكَّ قفلها
+
+// وضع الفلتر الحالي: 'all' | 'paid' | 'free'
+var currentPaidFilter='all';
+// التطبيق المنتظر الفتح بعد كلمة السر
+var pendingUnlockIndex=-1;
+
+// ===================================================
+//  CATEGORY STYLES
+// ===================================================
+var catColors={
+  'لغة عربية':    {bg:'#eef6f5',color:'#1e9e72'},
+  'رياضيات':       {bg:'#f0eeff',color:'#6c3fc5'},
+  'إسلامية':       {bg:'#e8fff2',color:'#15803d'},
+  'علوم':          {bg:'#e8f4ff',color:'#1d5fa8'},
+  'تربية مدنية':   {bg:'#fffbe8',color:'#92700a'},
+  'تاريخ':         {bg:'#fff2e8',color:'#b84c10'},
+  'جغرافيا':       {bg:'#eeffee',color:'#2d7a2d'},
+  'ألعاب':         {bg:'#fff0fb',color:'#a020a0'},
+  'أدوات':         {bg:'#f0f5ff',color:'#2060c0'}
+};
+
+/* auto-palette for custom categories */
+var customPalette=[
+  {bg:'#fff4e8',color:'#b05800'},{bg:'#fce8ff',color:'#8c00b0'},
+  {bg:'#e8f8ff',color:'#005fa8'},{bg:'#f8ffe8',color:'#4a7a00'},
+  {bg:'#ffe8e8',color:'#b00020'},{bg:'#f0ffe8',color:'#1a7a30'},
+  {bg:'#fff8e8',color:'#8a6000'},{bg:'#e8eeff',color:'#2840a0'}
+];
+
+// ===================================================
+//  CUSTOM CATEGORIES HELPERS
+// ===================================================
+function loadCustomCats(){
+  try{var s=localStorage.getItem(CATS_KEY);return s?JSON.parse(s):[]}catch(e){return[]}
+}
+function saveCustomCats(arr){localStorage.setItem(CATS_KEY,JSON.stringify(arr))}
+
+/* Assign a colour to a new custom cat */
+function getCustomCatColor(catName){
+  if(catColors[catName])return catColors[catName];
+  var existing=loadCustomCats();
+  var idx=existing.indexOf(catName);
+  if(idx<0)idx=0;
+  return customPalette[idx % customPalette.length];
+}
+
+/* Register a new cat if not already known */
+function registerCustomCat(catName){
+  if(!catName)return;
+  if(catColors[catName])return; // built-in, skip
+  var list=loadCustomCats();
+  if(list.indexOf(catName)<0){
+    list.push(catName);
+    saveCustomCats(list);
+    // assign colour
+    catColors[catName]=customPalette[(list.length-1)%customPalette.length];
+  }
+}
+
+/* Rebuild the filter bar to include custom cats */
+function rebuildFilterBar(){
+  var bar=document.getElementById('filtersBar');
+  if(!bar)return;
+  // keep built-in buttons (all except dynamic ones)
+  var builtIn=['all','لغة عربية','رياضيات','إسلامية','علوم','تربية مدنية','تاريخ','جغرافيا','ألعاب','أدوات'];
+  // remove old dynamic buttons
+  bar.querySelectorAll('.filter-btn-custom').forEach(function(b){b.remove()});
+  // add custom cats
+  var customCats=loadCustomCats();
+  customCats.forEach(function(cat){
+    if(builtIn.indexOf(cat)>=0)return;
+    var btn=document.createElement('button');
+    btn.className='filter-btn filter-btn-custom';
+    btn.textContent='📌 '+cat;
+    btn.onclick=function(){filterCategory(cat,this)};
+    bar.appendChild(btn);
+  });
+  // also rebuild admin select options
+  rebuildSelectOptions();
+}
+
+/* Sync admin <select> with custom cats */
+function rebuildSelectOptions(){
+  var sel=document.getElementById('fCat');
+  if(!sel)return;
+  // remove old custom options (before __new__)
+  sel.querySelectorAll('option.custom-opt').forEach(function(o){o.remove()});
+  var newOpt=sel.querySelector('option[value="__new__"]');
+  var customCats=loadCustomCats();
+  var builtIn=['لغة عربية','رياضيات','إسلامية','علوم','تربية مدنية','تاريخ','جغرافيا','ألعاب','أدوات'];
+  customCats.forEach(function(cat){
+    if(builtIn.indexOf(cat)>=0)return;
+    var opt=document.createElement('option');
+    opt.value=cat;opt.textContent='📌 '+cat;opt.className='custom-opt';
+    sel.insertBefore(opt,newOpt);
+  });
+}
+
+/* Show/hide custom cat input */
+function onCatChange(sel){
+  var wrap=document.getElementById('customCatWrap');
+  var hint=document.getElementById('customCatHint');
+  if(sel.value==='__new__'){
+    wrap.style.display='block';
+    document.getElementById('fCatCustom').value='';
+    if(hint)hint.style.display='none';
+  } else {
+    wrap.style.display='none';
+  }
+}
+
+/* Live preview hint */
+function previewCustomCat(val){
+  var hint=document.getElementById('customCatHint');
+  if(!hint)return;
+  val=val.trim();
+  if(val.length>0){
+    hint.style.display='block';
+    hint.textContent='✦ سيُضاف التصنيف "'+val+'" تلقائياً إلى الفلاتر والبطاقات';
+  } else {
+    hint.style.display='none';
+  }
+}
+
+/* Resolve final category value from select+custom input */
+function resolveCat(){
+  var sel=document.getElementById('fCat');
+  if(sel.value==='__new__'){
+    var custom=document.getElementById('fCatCustom').value.trim();
+    return custom||'';
+  }
+  return sel.value;
+}
+
+/* Set select value (handles custom cats during editApp) */
+function setCatValue(val){
+  var sel=document.getElementById('fCat');
+  // check if option exists
+  var found=false;
+  for(var i=0;i<sel.options.length;i++){
+    if(sel.options[i].value===val){sel.selectedIndex=i;found=true;break}
+  }
+  if(!found&&val){
+    // it's a custom cat — add option temporarily and select it
+    rebuildSelectOptions();
+    for(var j=0;j<sel.options.length;j++){
+      if(sel.options[j].value===val){sel.selectedIndex=j;break}
+    }
+  }
+  document.getElementById('customCatWrap').style.display='none';
+}
+
+// ===================================================
+//  DEFAULT DATA
+// ===================================================
+var defaultApps=[
+  // لغة عربية
+  {name:'الهمزة المتوسطة',desc:'سبع مراحل تفاعلية لإتقان كتابة الهمزة المتوسطة بأسلوب ميزان القوة، مع تغذية راجعة صوتية وتمارين إملائية.',url:'رابط_هنا',cat:'لغة عربية',age:'الصفوف 3–5',icon:'📝'},
+  {name:'النجمة الصغيرة تتعلم الحروف',desc:'28 حرفًا عربيًا بأشكالها الموضعية مع نطق صوتي وتمييز صوتي للأطفال في سن ما قبل المدرسة.',url:'رابط_هنا',cat:'لغة عربية',age:'4–6 سنوات',icon:'⭐'},
+  {name:'رنيم تتعلم الحروف',desc:'تطبيق الحروف بالإيموجي مع التحقق الصوتي — مصمَّم للأطفال 4–5 سنوات بصوت هادئ وتكرار مريح.',url:'رابط_هنا',cat:'لغة عربية',age:'4–5 سنوات',icon:'🌸'},
+  // رياضيات
+  {name:'الأرقام والأشكال الهندسية',desc:'سحب وإفلات وأشكال SVG وتعليم الأعداد بالعربية الفصحى المكيَّفة جنسيًا للأطفال.',url:'رابط_هنا',cat:'رياضيات',age:'4–7 سنوات',icon:'🔢'},
+  {name:'رنيم تتعلم الضرب',desc:'تجميع بصري بالنقاط، جمع متكرر، واختبار جدول الضرب مع كونفيتي واحتفالات تشجيعية.',url:'رابط_هنا',cat:'رياضيات',age:'7–9 سنوات',icon:'✖️'},
+  {name:'وحدات قياس السوائل',desc:'مرحلتان: اكتشاف جدول التحويل بالصوت، ثم تمارين تدريجية مع جولة التصحيح الذكية.',url:'رابط_هنا',cat:'رياضيات',age:'الصف 4–5',icon:'💧'},
+  {name:'الأباكوس — سوروبان',desc:'أباكوس تفاعلي 13 عمودًا مع تمارين الجمع والطرح للمستوى الأول وتتبع النتيجة.',url:'رابط_هنا',cat:'رياضيات',age:'الصف 1–3',icon:'🧮'},
+  // إسلامية
+  {name:'أركان الإسلام',desc:'تعلّم الأركان الخمسة بطريقة تفاعلية مع أسئلة وصور توضيحية ومقاطع صوتية.',url:'رابط_هنا',cat:'إسلامية',age:'الصف 1–3',icon:'🕌'},
+  {name:'حفظ القرآن الكريم',desc:'تطبيق لحفظ السور القصيرة بالتكرار الصوتي والتحدي الذاتي مع تتبع التقدم.',url:'رابط_هنا',cat:'إسلامية',age:'6–12 سنوات',icon:'📖'},
+  {name:'قصص الأنبياء',desc:'قصص تفاعلية ممتعة عن الأنبياء والرسل بأسلوب مشوق للأطفال مع رسوم ملونة.',url:'رابط_هنا',cat:'إسلامية',age:'6–10 سنوات',icon:'✨'},
+  // علوم
+  {name:'مغامرة الحيوانات',desc:'ثلاث مراحل: الحيوانات الأليفة والمتوحشة، طريقة الحركة، والغذاء — بواجهة قوس قزح.',url:'رابط_هنا',cat:'علوم',age:'6–8 سنوات',icon:'🦁'},
+  {name:'دورة الماء في الطبيعة',desc:'شرح تفاعلي لمراحل دورة الماء: التبخر والتكاثف والتساقط، مع أسئلة وصور متحركة.',url:'رابط_هنا',cat:'علوم',age:'الصف 3–5',icon:'💧'},
+  {name:'جسم الإنسان',desc:'استكشف أجهزة جسم الإنسان بالنقر والتفاعل: الجهاز الهضمي، التنفسي، والدوري.',url:'رابط_هنا',cat:'علوم',age:'الصف 4–5',icon:'🫀'},
+  // تربية مدنية
+  {name:'حقوق الطفل',desc:'تعلّم حقوق الطفل الأساسية من خلال قصص وأسئلة تفاعلية بأسلوب ممتع ومبسط.',url:'رابط_هنا',cat:'تربية مدنية',age:'الصف 2–4',icon:'🏛️'},
+  {name:'مؤسسات الدولة الجزائرية',desc:'تعرّف على مؤسسات الدولة ودور كل منها من خلال خريطة مفاهيمية تفاعلية.',url:'رابط_هنا',cat:'تربية مدنية',age:'الصف 4–5',icon:'🇩🇿'},
+  // تاريخ
+  {name:'ثورة التحرير الجزائرية',desc:'رحلة تفاعلية عبر أحداث ثورة التحرير المجيدة 1954–1962 بالخرائط والصور التاريخية.',url:'رابط_هنا',cat:'تاريخ',age:'الصف 4–5',icon:'📜'},
+  {name:'الحضارات القديمة',desc:'اكتشف الحضارة الإسلامية والفينيقية والأمازيغية من خلال جدول زمني تفاعلي ممتع.',url:'رابط_هنا',cat:'تاريخ',age:'الصف 3–5',icon:'🏺'},
+  // جغرافيا
+  {name:'خريطة الجزائر التفاعلية',desc:'تعرّف على ولايات الجزائر ومناطقها الجغرافية بالنقر على الخريطة مع معلومات مصورة.',url:'رابط_هنا',cat:'جغرافيا',age:'الصف 3–5',icon:'🗺️'},
+  {name:'المناخ والتضاريس',desc:'استكشف مناطق الجزائر: الشمال والهضاب العليا والصحراء الكبرى مع مقارنة المناخ.',url:'رابط_هنا',cat:'جغرافيا',age:'الصف 4–5',icon:'🏔️'},
+  // ألعاب
+  {name:'من أنا؟',desc:'لعبة تخمين بستة تصنيفات، اختر الإجابة بالإيموجي مع نطق صوتي وبطاقات معلوماتية وكونفيتي.',url:'رابط_هنا',cat:'ألعاب',age:'6–12 سنوات',icon:'🎯'},
+  {name:'لعبة الذاكرة',desc:'16 زوجاً من البطاقات بثلاث مستويات صعوبة، تقليب ثلاثي الأبعاد ونطق صوتي.',url:'رابط_هنا',cat:'ألعاب',age:'6–10 سنوات',icon:'🃏'},
+  {name:'مغامرة نجمة في الغابة السحرية',desc:'قصة تفاعلية متشعبة من 11 مشهداً وخمس نهايات مختلفة، مع دروس أخلاقية مضمَّنة.',url:'رابط_هنا',cat:'ألعاب',age:'6–10 سنوات',icon:'🌟'},
+  // أدوات
+  {name:'مساعد العقود الجزائري',desc:'توليد وتحليل العقود وسؤال القانون الجزائري بأسلوب محادثة — يشمل منشئ العقود الديناميكي.',url:'رابط_هنا',cat:'أدوات',age:'للجمهور العام',icon:'⚖️'}
+];
+
+// ===================================================
+//  STORAGE
+// ===================================================
+function loadApps(){
+  // إذا تم تحميل data.json الخارجي استخدمه كمصدر افتراضي
+  var base = window._externalApps || defaultApps;
+  try{
+    var s=localStorage.getItem(STORE_KEY);
+    return s ? JSON.parse(s) : JSON.parse(JSON.stringify(base));
+  }catch(e){
+    return JSON.parse(JSON.stringify(base));
+  }
+}
+function saveApps(a){localStorage.setItem(STORE_KEY,JSON.stringify(a))}
+function loadFavs(){try{var s=localStorage.getItem(FAV_KEY);return s?JSON.parse(s):{}}catch(e){return{}}}
+function saveFavs(o){localStorage.setItem(FAV_KEY,JSON.stringify(o))}
+function loadDone(){try{var s=localStorage.getItem(DONE_KEY);return s?JSON.parse(s):{}}catch(e){return{}}}
+function saveDone(o){localStorage.setItem(DONE_KEY,JSON.stringify(o))}
+function loadUnlocked(){try{var s=localStorage.getItem(UNLOCKED_KEY);return s?JSON.parse(s):{}}catch(e){return{}}}
+function saveUnlocked(o){localStorage.setItem(UNLOCKED_KEY,JSON.stringify(o))}
+
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+// ===================================================
+//  DARK MODE
+// ===================================================
+function applyDark(on){
+  document.documentElement.setAttribute('data-theme',on?'dark':'');
+  document.getElementById('darkIcon').textContent=on?'☀️':'🌙';
+  document.getElementById('darkLabel').textContent=on?'وضع النهار':'وضع الليل';
+  localStorage.setItem(DARK_KEY,on?'1':'0');
+}
+function toggleDark(){applyDark(document.documentElement.getAttribute('data-theme')!=='dark')}
+// init dark
+(function(){var d=localStorage.getItem(DARK_KEY);if(d==='1')applyDark(true)})();
+
+// ===================================================
+//  RENDER GRID
+// ===================================================
+var currentCat='all',currentSearch='';
+
+function renderGrid(){
+  var apps=loadApps(),favs=loadFavs(),done=loadDone(),unlocked=loadUnlocked();
+  var grid=document.getElementById('appGrid');
+  grid.innerHTML='';
+  var visible=0,delay=0;
+
+  apps.forEach(function(app,i){
+    var matchCat=currentCat==='all'||app.cat===currentCat;
+    var hay=(app.name+' '+app.desc+' '+app.cat).toLowerCase();
+    var matchSearch=!currentSearch||hay.includes(currentSearch);
+    var isPaid=!!(app.paid===true && app.paidPass && app.paidPass.trim()!=='');
+    // فلتر مدفوع/مجاني
+    if(currentPaidFilter==='paid' && !isPaid)return;
+    if(currentPaidFilter==='free' && isPaid)return;
+    if(!matchCat||!matchSearch)return;
+
+    var c=catColors[app.cat]||{bg:'#f0f0f0',color:'#444'};
+    var isFav=!!favs[i],isDone=!!done[i];
+    var isUnlocked=!!unlocked[i];
+    var isPlaceholder=!app.url||app.url==='رابط_هنا'||app.url==='#';
+
+    var card=document.createElement('div');
+    card.className='card'+(isDone?' done':'')+(isPaid?' paid-card':'');
+    card.setAttribute('data-index',i);
+    card.setAttribute('data-cat',app.cat||'');
+    card.style.animationDelay=(delay*65)+'ms';
+
+    // ── زر الحالة (مجاني / مدفوع) + زر المعاينة ──
+    var statusBtn='';
+    var previewBtn='';
+
+    if(isPlaceholder){
+      statusBtn='<button class="btn-status btn-soon">⏳ قريباً</button>';
+    } else {
+      // زر الحالة
+      if(isPaid && !isUnlocked){
+        statusBtn='<button class="btn-status btn-paid-status" onclick="event.stopPropagation();openUnlock('+i+')">💎 مدفوع</button>';
+      } else if(isPaid && isUnlocked){
+        statusBtn='<button class="btn-status btn-unlocked-status" onclick="event.stopPropagation();openPreview('+i+')">💎 مدفوع</button>';
+      } else {
+        statusBtn='<button class="btn-status btn-free-status">🆓 مجاني</button>';
+      }
+      // زر المعاينة
+      if(isPaid && !isUnlocked){
+        previewBtn='<button class="btn-open paid-btn" onclick="event.stopPropagation();openUnlock('+i+')">فتح ←</button>';
+      } else {
+        previewBtn='<button class="btn-open" onclick="event.stopPropagation();openPreview('+i+')">معاينة ←</button>';
+      }
+    }
+
+    // تقييم التطبيق من الكاش
+    var rData=_appRatings[i]||{avg:0,count:0};
+    var ratingHTML= rData.count>0
+      ? '<div class="card-rating">'+
+          '<span class="stars-display" style="color:#f5a623;font-size:0.78rem">'+
+            '★'.repeat(Math.round(rData.avg||0))+'☆'.repeat(5-Math.round(rData.avg||0))+
+          '</span>'+
+          '<span class="rating-count">('+rData.count+')</span>'+
+        '</div>'
+      : '<div class="card-rating"><span class="rating-count" style="font-size:0.72rem;color:var(--ink-soft)">لا يوجد تقييم بعد</span></div>';
+
+    // زر أكملت
+    var completeBtn = !isPlaceholder
+      ? '<button class="btn-complete'+(isDone?' completed-btn':'')+
+          '" onclick="event.stopPropagation();markComplete('+i+',this)">'+
+          (isDone?'✅ مكتمل':'○ أكملت')+
+          '</button>'
+      : '';
+
+    card.innerHTML=
+      '<div class="card-actions-top">'+
+        '<button class="btn-fav'+(isFav?' active':'')+'" onclick="event.stopPropagation();toggleFav('+i+',this)" title="'+(isFav?'إزالة من المفضلة':'أضف للمفضلة')+'">'+(isFav?'⭐':'☆')+'</button>'+
+        '<button class="btn-done-icon'+(isDone?' active':'')+'" onclick="event.stopPropagation();toggleDone('+i+',this)" title="'+(isDone?'إلغاء الإنجاز':'تم الإنجاز')+'">'+(isDone?'✅':'○')+'</button>'+
+      '</div>'+
+      '<div class="card-top">'+
+        '<div class="card-icon" style="background:'+c.bg+'">'+esc(app.icon||'📱')+'</div>'+
+        '<div class="card-meta">'+
+          '<span class="card-badge" style="background:'+c.bg+';color:'+c.color+'">'+esc(app.cat)+'</span>'+
+          '<div class="card-title">'+esc(app.name)+'</div>'+
+          ratingHTML+
+        '</div>'+
+      '</div>'+
+      '<p class="card-desc">'+esc(app.desc)+'</p>'+
+      '<div class="card-footer">'+
+        '<div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">'+
+          '<span class="card-age">'+esc(app.age||'')+'</span>'+
+          '<span class="done-badge">✓ منجز</span>'+
+        '</div>'+
+        '<div class="card-footer-btns">'+
+          (isPlaceholder?''
+            :'<button class="btn-status" style="background:var(--paper);color:var(--ink-soft);border:1px solid var(--border)" '+
+              'onclick="event.stopPropagation();openRating('+i+')" title="تقييم التطبيق">⭐</button>')+
+          completeBtn+
+          statusBtn+
+          previewBtn+
+        '</div>'+
+      '</div>';
+
+    // نقر البطاقة
+    if(!isPlaceholder){
+      card.addEventListener('click',function(){
+        if(isPaid && !isUnlocked){openUnlock(i)}
+        else{openPreview(i)}
+      });
+    }
+    card.addEventListener('mouseenter',function(){dimOthers(i)});
+    card.addEventListener('mouseleave',clearDim);
+    card.addEventListener('touchstart',function(){dimOthers(i)},{passive:true});
+    card.addEventListener('touchend',clearDim,{passive:true});
+
+    grid.appendChild(card);
+    visible++;delay++;
+  });
+
+  var empty=document.getElementById('emptyState');
+  if(visible===0&&!empty){
+    var el=document.createElement('div');el.id='emptyState';el.className='empty-state';
+    el.innerHTML='<div class="emoji">🔍</div><p>لا توجد نتائج مطابقة</p>';
+    grid.appendChild(el);
+  } else if(visible>0&&empty){empty.remove()}
+  document.getElementById('appsCount').textContent=visible+' تطبيق';
+}
+
+// ===================================================
+//  DIM / FOCUS
+// ===================================================
+function dimOthers(idx){
+  var grid=document.getElementById('appGrid');grid.classList.add('has-focus');
+  grid.querySelectorAll('.card').forEach(function(c){
+    if(parseInt(c.getAttribute('data-index'))===idx){c.classList.add('focused')}
+    else{c.classList.remove('focused')}
+  });
+}
+function clearDim(){
+  var grid=document.getElementById('appGrid');grid.classList.remove('has-focus');
+  grid.querySelectorAll('.card').forEach(function(c){c.classList.remove('focused')});
+}
+
+// ===================================================
+//  FILTER
+// ===================================================
+function filterCategory(cat,btn){
+  currentCat=cat; currentPaidFilter='all';
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');renderGrid();
+}
+function filterPaid(btn){
+  currentCat='all'; currentPaidFilter='paid';
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');renderGrid();
+}
+function filterFree(btn){
+  currentCat='all'; currentPaidFilter='free';
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');renderGrid();
+}
+function filterApps(){
+  currentSearch=document.getElementById('searchBar').value.trim().toLowerCase();renderGrid();
+}
+
+// ===================================================
+//  UNLOCK PAID APP
+// ===================================================
+function openUnlock(i){
+  var app=loadApps()[i];
+  pendingUnlockIndex=i;
+  document.getElementById('unlockAppName').textContent='📱 '+app.name;
+  document.getElementById('unlockPass').value='';
+  document.getElementById('unlockPass').style.borderColor='';
+  document.getElementById('unlockErr').style.display='none';
+
+  // تشخيص مؤقت: أظهر كلمة السر المخزنة في console
+  console.log('[Unlock Debug] app index:'+i+' paid:'+app.paid+' paidPass:"'+app.paidPass+'"');
+
+  document.getElementById('unlockOverlay').style.display='block';
+  document.body.style.overflow='hidden';
+  setTimeout(function(){document.getElementById('unlockPass').focus()},300);
+}
+function tryUnlock(){
+  var apps=loadApps();
+  var app=apps[pendingUnlockIndex];
+  var entered=document.getElementById('unlockPass').value.trim();
+
+  // تحقق أن التطبيق موجود وله كلمة سر
+  if(!app){closeUnlock();return}
+
+  // إذا لم توجد كلمة سر مخزنة — افتح مباشرة
+  if(!app.paidPass || app.paidPass.trim()===''){
+    var unlocked=loadUnlocked();
+    unlocked[pendingUnlockIndex]=true;
+    saveUnlocked(unlocked);
+    closeUnlock();
+    openPreview(pendingUnlockIndex);
+    renderGrid();
+    return;
+  }
+
+  var stored=app.paidPass.trim();
+
+  if(entered===stored){
+    var unlocked=loadUnlocked();
+    unlocked[pendingUnlockIndex]=true;
+    saveUnlocked(unlocked);
+    closeUnlock();
+    openPreview(pendingUnlockIndex);
+    renderGrid();
+  } else {
+    var err=document.getElementById('unlockErr');
+    // عرض الخطأ مع معلومة تشخيصية مخفية في console
+    console.log('[Unlock] entered:"'+entered+'" stored:"'+stored+'" match:'+(entered===stored));
+    err.style.display='block';
+    err.textContent='❌ كلمة السر غير صحيحة';
+    document.getElementById('unlockPass').style.borderColor='#e53e3e';
+    setTimeout(function(){
+      err.style.display='none';
+      document.getElementById('unlockPass').style.borderColor='';
+    },2500);
+  }
+}
+function closeUnlock(){
+  document.getElementById('unlockOverlay').style.display='none';
+  document.body.style.overflow='';
+  pendingUnlockIndex=-1;
+}
+document.getElementById('unlockOverlay').addEventListener('click',function(e){
+  if(e.target===this)closeUnlock();
+});
+
+// toggle paid fields in form
+function togglePaidFields(cb){
+  document.getElementById('paidPassWrap').style.display=cb.checked?'block':'none';
+  if(!cb.checked)document.getElementById('fPaidPass').value='';
+}
+
+// ===================================================
+//  WISHLIST & DONE
+// ===================================================
+function toggleFav(i,btn){
+  var favs=loadFavs();
+  if(favs[i]){delete favs[i];btn.textContent='☆';btn.classList.remove('active')}
+  else{favs[i]=true;btn.textContent='⭐';btn.classList.add('active')}
+  saveFavs(favs);
+}
+function toggleDone(i,btn){
+  var done=loadDone(),card=btn.closest('.card');
+  if(done[i]){
+    delete done[i];btn.textContent='○';btn.classList.remove('active');card.classList.remove('done');
+  } else {
+    done[i]=true;btn.textContent='✅';btn.classList.add('active');card.classList.add('done');
+  }
+  saveDone(done);
+  var badge=card.querySelector('.done-badge');if(badge)badge.style.display=done[i]?'inline-block':'none';
+  var t=card.querySelector('.card-title');if(t){t.style.textDecoration=done[i]?'line-through':'none';t.style.color=done[i]?'var(--ink-soft)':''}
+}
+
+// ===================================================
+//  PREVIEW
+// ===================================================
+function openPreview(i){
+  var app=loadApps()[i],c=catColors[app.cat]||{bg:'#f0f0f0',color:'#444'};
+  document.getElementById('prevIcon').textContent=app.icon||'📱';
+  document.getElementById('prevIcon').style.background=c.bg;
+  document.getElementById('prevName').textContent=app.name;
+  document.getElementById('prevCat').textContent=app.cat+' · '+app.age;
+  document.getElementById('prevAge').textContent=app.age||'';
+  document.getElementById('prevOpenFull').href=app.url;
+  document.getElementById('prevLoader').style.display='flex';
+  var f=document.getElementById('prevFrame');
+  f.style.opacity='0';
+  f.onload=function(){
+    document.getElementById('prevLoader').style.display='none';
+    f.style.transition='opacity 0.3s';f.style.opacity='1';
+  };
+  f.src=app.url;
+  document.getElementById('previewOverlay').style.display='block';
+  document.body.style.overflow='hidden';
+}
+function closePreview(){
+  document.getElementById('previewOverlay').style.display='none';
+  document.body.style.overflow='';
+  var f=document.getElementById('prevFrame');
+  f.onload=null;f.src='about:blank';
+}
+document.getElementById('previewOverlay').addEventListener('click',function(e){if(e.target===this)closePreview()});
+
+// ===================================================
+//  STICKY
+// ===================================================
+window.addEventListener('scroll',function(){
+  var sc=document.getElementById('stickyControls');
+  sc.classList.toggle('scrolled',window.scrollY>60);
+},{passive:true});
+
+// ===================================================
+//  SECRET TRIGGER — 5 taps logo
+// ===================================================
+var tapCount=0,tapTimer=null;
+document.getElementById('logoTrigger').addEventListener('click',function(){
+  tapCount++;clearTimeout(tapTimer);
+  tapTimer=setTimeout(function(){tapCount=0},2000);
+  if(tapCount>=5){tapCount=0;openAdmin()}
+});
+
+// ===================================================
+//  ADMIN
+// ===================================================
+function openAdmin(){
+  document.getElementById('adminOverlay').style.display='block';
+  document.getElementById('adminLogin').style.display='block';
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('adminPass').value='';
+  document.getElementById('passError').style.display='none';
+}
+function closeAdmin(){document.getElementById('adminOverlay').style.display='none';resetForm()}
+document.getElementById('adminOverlay').addEventListener('click',function(e){if(e.target===this)closeAdmin()});
+function checkPass(){
+  if(document.getElementById('adminPass').value===ADMIN_PASS){
+    document.getElementById('adminLogin').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    switchTab('list',document.querySelector('.tab-btn'));renderAdminList();
+  }else{document.getElementById('passError').style.display='block'}
+}
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active')});
+  if(btn)btn.classList.add('active');
+  var tc=document.getElementById('tab-'+name);if(tc)tc.classList.add('active');
+  if(name==='cats')renderCatsTab();
+}
+
+// ===================================================
+//  CATEGORIES TAB
+// ===================================================
+var BUILTIN_CATS=['لغة عربية','رياضيات','إسلامية','علوم','تربية مدنية','تاريخ','جغرافيا','ألعاب','أدوات'];
+
+function renderCatsTab(){
+  // مدمجة
+  var bl=document.getElementById('builtinCatList');
+  if(bl){
+    bl.innerHTML='';
+    BUILTIN_CATS.forEach(function(cat){
+      var c=catColors[cat]||{bg:'#f0f0f0',color:'#444'};
+      var chip=document.createElement('span');
+      chip.className='cat-chip-builtin';
+      chip.style.background=c.bg;chip.style.color=c.color;
+      chip.style.borderColor=c.bg;
+      chip.textContent=cat;
+      bl.appendChild(chip);
+    });
+  }
+  // مخصصة
+  var cl=document.getElementById('customCatList');
+  if(!cl)return;
+  cl.innerHTML='';
+  var customCats=loadCustomCats();
+  if(customCats.length===0){
+    cl.innerHTML='<p style="color:var(--ink-soft);font-size:0.82rem;text-align:center;padding:14px">لا توجد تصنيفات مخصصة بعد</p>';
+    return;
+  }
+  var apps=loadApps();
+  customCats.forEach(function(cat){
+    // عدد البطاقات المرتبطة
+    var count=apps.filter(function(a){return a.cat===cat}).length;
+    var c=catColors[cat]||{bg:'#f0f0f0',color:'#444'};
+    var row=document.createElement('div');
+    row.className='cat-chip-custom';
+    row.innerHTML=
+      '<span class="chip-name" style="color:'+c.color+'">📌 '+esc(cat)+'</span>'+
+      '<span class="chip-count">'+count+' بطاقة</span>'+
+      '<button class="btn-del-cat" onclick="deleteCustomCat(\''+esc(cat)+'\','+count+')">🗑️ حذف</button>';
+    cl.appendChild(row);
+  });
+}
+
+function deleteCustomCat(cat,count){
+  var msg='هل تريدين حذف التصنيف "'+cat+'"؟';
+  if(count>0){
+    msg+='\n\nتنبيه: يوجد '+count+' تطبيق مرتبط بهذا التصنيف.\nستبقى البطاقات موجودة لكن بدون تصنيف محدد في الفلاتر.';
+  }
+  if(!confirm(msg))return;
+  // حذف من القائمة المحفوظة
+  var list=loadCustomCats().filter(function(c){return c!==cat});
+  saveCustomCats(list);
+  // حذف اللون
+  delete catColors[cat];
+  // إعادة البناء
+  rebuildFilterBar();
+  renderGrid();
+  renderCatsTab();
+  // رسالة تأكيد
+  var m=document.getElementById('catsMsg');
+  if(m){m.style.display='block';m.style.color='var(--teal)';m.textContent='✅ تم حذف التصنيف "'+cat+'"';
+    setTimeout(function(){m.style.display='none'},2500);
+  }
+}
+function renderAdminList(){
+  var apps=loadApps(),list=document.getElementById('adminAppList');
+  list.innerHTML='';
+  if(!apps.length){list.innerHTML='<p style="color:var(--ink-soft);font-size:0.83rem;text-align:center;padding:18px">لا توجد تطبيقات</p>';return}
+  apps.forEach(function(app,i){
+    var row=document.createElement('div');row.className='admin-app-row';
+    row.innerHTML='<span class="row-icon">'+(app.icon||'📱')+'</span><span class="row-name">'+esc(app.name)+'</span><span class="row-cat">'+esc(app.cat)+'</span><button class="btn-edit-row" onclick="editApp('+i+')">✏️</button><button class="btn-del-row" onclick="deleteApp('+i+')">🗑️</button>';
+    list.appendChild(row);
+  });
+}
+function editApp(i){
+  var app=loadApps()[i];
+  document.getElementById('editIndex').value=i;
+  document.getElementById('fName').value=app.name;
+  document.getElementById('fDesc').value=app.desc;
+  document.getElementById('fUrl').value=app.url||'';
+  setCatValue(app.cat);
+  document.getElementById('fAge').value=app.age||'';
+  document.getElementById('fIcon').value=app.icon||'';
+
+  // ── حقل مدفوع ──
+  var isPaid=!!(app.paid && app.paidPass);
+  var cbPaid=document.getElementById('fPaid');
+  var ppWrap=document.getElementById('paidPassWrap');
+  var ppInp=document.getElementById('fPaidPass');
+  if(cbPaid){cbPaid.checked=isPaid}
+  if(ppWrap){ppWrap.style.display=isPaid?'block':'none'}
+  if(ppInp){ppInp.value=app.paidPass||''}
+
+  document.getElementById('formTitle').textContent='✏️ تعديل التطبيق';
+  switchTab('form',document.querySelectorAll('.tab-btn')[1]);
+}
+function deleteApp(i){
+  if(!confirm('هل تريدين حذف هذا التطبيق؟'))return;
+  var apps=loadApps();apps.splice(i,1);saveApps(apps);renderAdminList();renderGrid();
+}
+function saveApp(){
+  var name=document.getElementById('fName').value.trim();
+  var desc=document.getElementById('fDesc').value.trim();
+  var url=document.getElementById('fUrl').value.trim();
+  var cat=resolveCat();
+  var age=document.getElementById('fAge').value.trim();
+  var icon=document.getElementById('fIcon').value.trim();
+  var msg=document.getElementById('formMsg');
+
+  // ── قراءة حقل مدفوع — نقرأ قبل أي تعديل على DOM ──
+  var cbPaid=document.getElementById('fPaid');
+  var ppWrap=document.getElementById('paidPassWrap');
+  var ppInp=document.getElementById('fPaidPass');
+
+  // تأكد من إظهار الحقل مؤقتاً لقراءة قيمته
+  var wasHidden=false;
+  if(ppWrap && ppWrap.style.display==='none'){
+    wasHidden=true;
+    ppWrap.style.display='block';
+  }
+
+  var isPaid=!!(cbPaid && cbPaid.checked);
+  var paidPass=ppInp ? ppInp.value : '';
+  paidPass=paidPass.trim();
+
+  // أعد الإخفاء إن لم يكن مدفوعاً
+  if(wasHidden && !isPaid && ppWrap){
+    ppWrap.style.display='none';
+  }
+
+  // تشخيص
+  console.log('[saveApp] isPaid:'+isPaid+' paidPass:"'+paidPass+'" checkbox:'+(cbPaid?cbPaid.checked:'NULL'));
+
+  // التحقق
+  if(!name||!desc||!cat||cat==='__new__'){
+    msg.style.display='block';msg.style.color='#e53e3e';
+    msg.textContent='⚠️ الاسم والوصف والتصنيف إلزامية';return;
+  }
+  if(isPaid && !paidPass){
+    msg.style.display='block';msg.style.color='#e53e3e';
+    msg.textContent='⚠️ أدخلي كلمة السر للتطبيق المدفوع';return;
+  }
+
+  registerCustomCat(cat);
+  var apps=loadApps();
+  var idx=parseInt(document.getElementById('editIndex').value);
+
+  var obj={
+    name:name,
+    desc:desc,
+    url:url||'#',
+    cat:cat,
+    age:age,
+    icon:icon||'📱',
+    paid:isPaid,
+    paidPass:isPaid ? paidPass : ''
+  };
+
+  console.log('[saveApp] saving obj:',JSON.stringify(obj));
+
+  if(idx>=0){apps[idx]=obj}else{apps.push(obj)}
+  saveApps(apps);
+
+  // تحقق فوري من التخزين
+  var check=loadApps()[idx>=0?idx:apps.length-1];
+  console.log('[saveApp] verified from storage — paid:'+check.paid+' paidPass:"'+check.paidPass+'"');
+
+  rebuildFilterBar();
+  renderAdminList();
+  renderGrid();
+  resetForm();
+  msg.style.display='block';msg.style.color='var(--teal)';
+  msg.textContent='✅ تم الحفظ — '+(isPaid?'💎 مدفوع':'🆓 مجاني');
+  setTimeout(function(){msg.style.display='none'},2800);
+}
+function resetForm(){
+  ['editIndex','fName','fDesc','fUrl','fAge','fIcon','fPaidPass'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.value=id==='editIndex'?'-1':'';
+  });
+  var fc=document.getElementById('fCat');if(fc)fc.value='';
+  var cb=document.getElementById('fPaid');if(cb)cb.checked=false;
+  var pw=document.getElementById('paidPassWrap');if(pw)pw.style.display='none';
+  var cw=document.getElementById('customCatWrap');if(cw)cw.style.display='none';
+  var cc=document.getElementById('fCatCustom');if(cc)cc.value='';
+  var ch=document.getElementById('customCatHint');if(ch)ch.style.display='none';
+  var ft=document.getElementById('formTitle');if(ft)ft.textContent='➕ إضافة تطبيق جديد';
+  var fm=document.getElementById('formMsg');if(fm)fm.style.display='none';
+}
+
+// ===================================================
+//  BACKUP
+// ===================================================
+function exportData(){
+  var data={version:'2.2',exported:new Date().toISOString(),apps:loadApps()};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='ranimfay-apps-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  showBackupMsg('✅ تم التصدير بنجاح','var(--teal)');
+}
+function importData(input){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      var apps=data.apps||data;
+      if(!Array.isArray(apps))throw new Error('تنسيق غير صحيح');
+      if(!confirm('سيتم استبدال البيانات الحالية. هل أنت متأكدة؟'))return;
+      saveApps(apps);renderAdminList();renderGrid();
+      showBackupMsg('✅ تم الاستيراد — '+apps.length+' تطبيق','var(--teal)');
+    }catch(err){showBackupMsg('❌ ملف غير صالح','#e53e3e')}
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+function resetToDefault(){
+  if(!confirm('هل أنت متأكدة من استعادة الافتراضي؟'))return;
+  localStorage.removeItem(STORE_KEY);renderAdminList();renderGrid();
+  showBackupMsg('✅ تمت الاستعادة','var(--teal)');
+}
+function showBackupMsg(txt,color){
+  var m=document.getElementById('backupMsg');if(!m)return;
+  m.style.display='block';m.style.color=color;m.textContent=txt;
+  setTimeout(function(){m.style.display='none'},3000);
+}
+
+// ===================================================
+//  AUTH UI
+// ===================================================
+function updateAuthUI(user){
+  var btn   = document.getElementById('authHeaderBtn');
+  var lbl   = document.getElementById('authHeaderLabel');
+  var icon  = document.getElementById('authAvatarIcon');
+  var jBtn  = document.getElementById('journeyBtn');
+  if(!btn)return;
+  if(user){
+    var name = user.displayName || user.email.split('@')[0];
+    icon.textContent = name.charAt(0).toUpperCase();
+    lbl.textContent  = name;
+    btn.onclick = function(){ if(confirm('هل تريدين تسجيل الخروج؟')) doLogout() };
+    if(jBtn) jBtn.style.display='flex';
+    loadJourneyData();
+  } else {
+    icon.textContent = '👤';
+    lbl.textContent  = 'دخول';
+    btn.onclick = openAuth;
+    if(jBtn) jBtn.style.display='none';
+  }
+}
+
+function openAuth(){
+  document.getElementById('authOverlay').style.display='block';
+  document.body.style.overflow='hidden';
+  switchAuthTab('login');
+}
+function closeAuth(){
+  document.getElementById('authOverlay').style.display='none';
+  document.body.style.overflow='';
+}
+document.getElementById('authOverlay').addEventListener('click',function(e){
+  if(e.target===this)closeAuth();
+});
+
+function switchAuthTab(tab){
+  document.getElementById('loginForm').style.display  = tab==='login' ?'block':'none';
+  document.getElementById('signupForm').style.display = tab==='signup'?'block':'none';
+  document.getElementById('tabLogin').classList.toggle('active',  tab==='login');
+  document.getElementById('tabSignup').classList.toggle('active', tab==='signup');
+  document.getElementById('loginErr').style.display  ='none';
+  document.getElementById('signupErr').style.display ='none';
+}
+
+function doLogin(){
+  var fb=window._fb; if(!fb){alert('Firebase غير متصل');return}
+  var email = document.getElementById('loginEmail').value.trim();
+  var pass  = document.getElementById('loginPass').value;
+  var err   = document.getElementById('loginErr');
+  err.style.display='none';
+  fb.signInWithEmailAndPassword(fb.auth, email, pass)
+    .then(function(){closeAuth()})
+    .catch(function(e){
+      err.style.display='block';
+      err.textContent = e.code==='auth/user-not-found'?'البريد غير مسجل':
+                        e.code==='auth/wrong-password'?'كلمة السر خاطئة':
+                        e.code==='auth/invalid-email'?'بريد إلكتروني غير صالح':
+                        'خطأ: '+e.message;
+    });
+}
+
+function doSignup(){
+  var fb=window._fb; if(!fb){alert('Firebase غير متصل');return}
+  var name  = document.getElementById('signupName').value.trim();
+  var email = document.getElementById('signupEmail').value.trim();
+  var pass  = document.getElementById('signupPass').value;
+  var err   = document.getElementById('signupErr');
+  err.style.display='none';
+  if(!name){err.style.display='block';err.textContent='أدخلي اسمك';return}
+  fb.createUserWithEmailAndPassword(fb.auth, email, pass)
+    .then(function(cred){
+      return fb.updateProfile(cred.user,{displayName:name}).then(function(){
+        return fb.setDoc(fb.doc(fb.db,'users',cred.user.uid),{
+          name:name, email:email,
+          completed:[], points:0, badges:[],
+          createdAt: fb.serverTimestamp()
+        });
+      });
+    })
+    .then(function(){closeAuth()})
+    .catch(function(e){
+      err.style.display='block';
+      err.textContent = e.code==='auth/email-already-in-use'?'البريد مستخدم مسبقاً':
+                        e.code==='auth/weak-password'?'كلمة السر قصيرة جداً':
+                        'خطأ: '+e.message;
+    });
+}
+
+function doLogout(){
+  var fb=window._fb; if(!fb)return;
+  fb.signOut(fb.auth);
+}
+
+// ===================================================
+//  JOURNEY PAGE
+// ===================================================
+var BADGES_DEF=[
+  {id:'first',  icon:'🌱', label:'أول خطوة',  req:1},
+  {id:'three',  icon:'🔥', label:'ثلاثة',      req:3},
+  {id:'five',   icon:'⭐', label:'خمسة',       req:5},
+  {id:'ten',    icon:'🏆', label:'عشرة',       req:10},
+  {id:'twenty', icon:'💎', label:'عشرون',      req:20},
+];
+
+function openJourney(){
+  document.getElementById('journeyPage').style.display='block';
+  document.body.style.overflow='hidden';
+  loadJourneyData();
+}
+function closeJourney(){
+  document.getElementById('journeyPage').style.display='none';
+  document.body.style.overflow='';
+}
+
+function loadJourneyData(){
+  var fb=window._fb; var user=window._currentUser;
+  if(!fb||!user)return;
+  fb.getDoc(fb.doc(fb.db,'users',user.uid)).then(function(snap){
+    if(!snap.exists())return;
+    var data=snap.data();
+    var completed=data.completed||[];
+    var points   =data.points  ||0;
+    var earned   =data.badges  ||[];
+    // إحصائيات
+    var sc=document.getElementById('statCompleted');
+    var sp=document.getElementById('statPoints');
+    var sb=document.getElementById('statBadges');
+    if(sc)sc.textContent=completed.length;
+    if(sp)sp.textContent=points;
+    if(sb)sb.textContent=earned.length;
+    // شارات
+    var bg=document.getElementById('badgesGrid');
+    if(bg){
+      bg.innerHTML='';
+      BADGES_DEF.forEach(function(b){
+        var isEarned=earned.indexOf(b.id)>=0;
+        var el=document.createElement('div');
+        el.className='badge-item '+(isEarned?'earned':'locked');
+        el.innerHTML='<span>'+b.icon+'</span><span class="badge-lbl">'+b.label+'</span>';
+        el.title=isEarned?'مكتسبة ✅':'أكملي '+b.req+' تطبيقات للحصول عليها';
+        bg.appendChild(el);
+      });
+    }
+    // التطبيقات المكتملة
+    var cl=document.getElementById('completedList');
+    if(cl){
+      if(!completed.length){
+        cl.innerHTML='<p style="color:var(--ink-soft);font-size:0.85rem;text-align:center;padding:20px">لم تكملي أي تطبيق بعد 🚀</p>';
+      } else {
+        cl.innerHTML='';
+        var apps=loadApps();
+        completed.forEach(function(item){
+          var app=apps[item.idx]||{name:item.name||'تطبيق',icon:'📱'};
+          var row=document.createElement('div');
+          row.className='completed-row';
+          row.innerHTML='<span class="completed-icon">'+(app.icon||'📱')+'</span>'+
+            '<span class="completed-name">'+esc(app.name||item.name)+'</span>'+
+            '<span class="completed-date">'+(item.date||'')+'</span>';
+          cl.appendChild(row);
+        });
+      }
+    }
+  }).catch(function(e){console.warn('Journey load error:',e)});
+}
+
+function markComplete(appIdx, btn){
+  var fb=window._fb; var user=window._currentUser;
+  var apps=loadApps(); var app=apps[appIdx];
+  if(!app)return;
+
+  if(!fb||!user){
+    // حفظ محلي فقط
+    toggleDone(appIdx, btn.closest('.card').querySelector('.btn-done-icon'));
+    return;
+  }
+
+  var userRef=fb.doc(fb.db,'users',user.uid);
+  fb.getDoc(userRef).then(function(snap){
+    var data=snap.exists()?snap.data():{completed:[],points:0,badges:[]};
+    var completed=data.completed||[];
+    var already=completed.some(function(c){return c.idx===appIdx});
+    if(already){
+      // إلغاء
+      completed=completed.filter(function(c){return c.idx!==appIdx});
+      return fb.updateDoc(userRef,{completed:completed,points:Math.max(0,(data.points||0)-10)})
+        .then(function(){
+          btn.classList.remove('completed-btn');
+          btn.textContent='○ أكملت';
+          showToast('تم إلغاء الإكمال');
+          loadJourneyData();
+        });
+    }
+    // إضافة
+    var today=new Date().toLocaleDateString('ar-DZ');
+    completed.push({idx:appIdx,name:app.name,date:today});
+    var newPoints=(data.points||0)+10;
+    // تحقق من الشارات
+    var badges=data.badges||[];
+    BADGES_DEF.forEach(function(b){
+      if(completed.length>=b.req && badges.indexOf(b.id)<0){
+        badges.push(b.id);
+        showToast('🎖️ حصلتِ على شارة: '+b.label);
+      }
+    });
+    return fb.updateDoc(userRef,{completed:completed,points:newPoints,badges:badges})
+      .then(function(){
+        btn.classList.add('completed-btn');
+        btn.textContent='✅ مكتمل';
+        showToast('✅ أحسنتِ! +10 نقاط');
+        loadJourneyData();
+      });
+  }).catch(function(e){console.warn('Complete error:',e)});
+}
+
+// ===================================================
+//  RATINGS
+// ===================================================
+var _ratingAppIdx=-1, _selectedStar=0;
+
+function openRating(i){
+  _ratingAppIdx=i; _selectedStar=0;
+  var app=loadApps()[i];
+  document.getElementById('ratingAppName').textContent=(app?app.name:'التطبيق');
+  document.getElementById('ratingComment').value='';
+  document.getElementById('ratingSuccess').style.display='none';
+  selectStar(0);
+  document.getElementById('ratingOverlay').style.display='block';
+  document.body.style.overflow='hidden';
+  loadReviews(i);
+}
+function closeRating(){
+  document.getElementById('ratingOverlay').style.display='none';
+  document.body.style.overflow='';
+  _ratingAppIdx=-1;
+}
+document.getElementById('ratingOverlay').addEventListener('click',function(e){
+  if(e.target===this)closeRating();
+});
+
+function selectStar(val){
+  _selectedStar=val;
+  document.querySelectorAll('.star-btn').forEach(function(btn){
+    btn.classList.toggle('active', parseInt(btn.getAttribute('data-val'))<=val);
+  });
+}
+
+function submitRating(){
+  var fb=window._fb;
+  if(!fb){showToast('Firebase غير متصل');return}
+  if(!_selectedStar){showToast('اختاري عدد النجوم أولاً');return}
+  var comment=document.getElementById('ratingComment').value.trim();
+  var user=window._currentUser;
+  var userName=user?(user.displayName||'مستخدم'):'زائر';
+  var col=fb.collection(fb.db,'ratings','app_'+_ratingAppIdx,'reviews');
+  fb.addDoc(col,{
+    stars:_selectedStar, comment:comment,
+    userName:userName, createdAt:fb.serverTimestamp()
+  }).then(function(){
+    document.getElementById('ratingSuccess').style.display='block';
+    document.getElementById('ratingComment').value='';
+    selectStar(0);
+    loadReviews(_ratingAppIdx);
+    // تحديث متوسط النجوم في بيانات التطبيق
+    updateAppRating(_ratingAppIdx);
+    setTimeout(function(){
+      document.getElementById('ratingSuccess').style.display='none';
+    },2500);
+  }).catch(function(e){showToast('خطأ: '+e.message)});
+}
+
+function loadReviews(appIdx){
+  var fb=window._fb; if(!fb)return;
+  var list=document.getElementById('reviewsList');
+  if(!list)return;
+  list.innerHTML='<p style="font-size:0.8rem;color:var(--ink-soft);text-align:center">جارٍ التحميل…</p>';
+  var col=fb.collection(fb.db,'ratings','app_'+appIdx,'reviews');
+  fb.getDocs(fb.query(col,fb.orderBy('createdAt','desc')))
+    .then(function(snap){
+      if(snap.empty){list.innerHTML='<p style="font-size:0.8rem;color:var(--ink-soft);text-align:center;padding:10px">لا توجد تقييمات بعد — كوني الأولى!</p>';return}
+      list.innerHTML='';
+      snap.forEach(function(d){
+        var r=d.data();
+        var el=document.createElement('div');
+        el.className='review-item';
+        el.innerHTML='<div class="review-top">'+
+          '<span class="review-stars">'+'★'.repeat(r.stars)+'☆'.repeat(5-r.stars)+'</span>'+
+          '<span class="review-name">'+esc(r.userName||'زائر')+'</span>'+
+          '</div>'+
+          (r.comment?'<div class="review-text">'+esc(r.comment)+'</div>':'');
+        list.appendChild(el);
+      });
+    }).catch(function(){list.innerHTML=''});
+}
+
+function updateAppRating(appIdx){
+  var fb=window._fb; if(!fb)return;
+  var col=fb.collection(fb.db,'ratings','app_'+appIdx,'reviews');
+  fb.getDocs(col).then(function(snap){
+    var total=0,count=0;
+    snap.forEach(function(d){total+=d.data().stars||0;count++});
+    var avg=count?Math.round((total/count)*10)/10:0;
+    // حفظ الملخص
+    fb.setDoc(fb.doc(fb.db,'ratings','app_'+appIdx),{avg:avg,count:count},{merge:true});
+    // تحديث البطاقة في الواجهة
+    var ratingEl=document.querySelector('[data-index="'+appIdx+'"] .stars-display');
+    var countEl =document.querySelector('[data-index="'+appIdx+'"] .rating-count');
+    if(ratingEl)ratingEl.textContent=starsStr(avg);
+    if(countEl) countEl.textContent='('+count+')';
+  });
+}
+
+function starsStr(avg){
+  var full=Math.floor(avg), half=(avg-full)>=0.5?1:0, empty=5-full-half;
+  return '★'.repeat(full)+(half?'½':'')+'☆'.repeat(empty);
+}
+
+// تحميل متوسط تقييمات جميع التطبيقات
+var _appRatings={};
+function loadAllRatings(){
+  var fb=window._fb; if(!fb)return;
+  var apps=loadApps();
+  apps.forEach(function(app,i){
+    fb.getDoc(fb.doc(fb.db,'ratings','app_'+i))
+      .then(function(snap){
+        if(snap.exists()){
+          _appRatings[i]=snap.data();
+          var ratingEl=document.querySelector('[data-index="'+i+'"] .stars-display');
+          var countEl =document.querySelector('[data-index="'+i+'"] .rating-count');
+          if(ratingEl)ratingEl.textContent=starsStr(_appRatings[i].avg||0);
+          if(countEl) countEl.textContent='('+(_appRatings[i].count||0)+')';
+        }
+      }).catch(function(){});
+  });
+}
+
+// ===================================================
+//  TOAST
+// ===================================================
+function showToast(msg){
+  var t=document.getElementById('toastMsg');
+  if(!t){
+    t=document.createElement('div');t.id='toastMsg';
+    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);'+
+      'background:var(--ink);color:white;padding:10px 20px;border-radius:50px;'+
+      'font-size:0.85rem;font-weight:600;z-index:9000;white-space:nowrap;'+
+      'box-shadow:0 4px 16px rgba(0,0,0,0.3);transition:opacity 0.3s;';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;t.style.opacity='1';t.style.display='block';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.style.display='none'},300)},2500);
+}
+
+// ===================================================
+//  INIT
+// ===================================================
+(function(){
+  var saved=loadCustomCats();
+  saved.forEach(function(cat,i){
+    if(!catColors[cat])catColors[cat]=customPalette[i%customPalette.length];
+  });
+})();
+rebuildFilterBar();
+renderGrid();
+// ===================================================
+//  تحميل data.json الخارجي
+// ===================================================
+(function loadExternalData(){
+  fetch('/data.json')
+    .then(function(r){ return r.json() })
+    .then(function(data){
+      if(Array.isArray(data) && data.length > 0){
+        window._externalApps = data;
+        // إذا لم يكن هناك بيانات محفوظة محلياً — أعد رسم الشبكة
+        if(!localStorage.getItem(STORE_KEY)){
+          renderGrid();
+        }
+        console.log('[data.json] loaded: '+data.length+' apps');
+      }
+    })
+    .catch(function(e){
+      console.warn('[data.json] not found — using defaultApps',e);
+    });
+})();
+setTimeout(function(){if(window._fb)loadAllRatings()},1500);
+
+// ===================================================
+//  PWA — Service Worker Registration
+// ===================================================
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/sw.js')
+      .then(function(reg){
+        console.log('[PWA] Service Worker registered — scope:', reg.scope);
+        reg.addEventListener('updatefound', function(){
+          var newWorker = reg.installing;
+          newWorker.addEventListener('statechange', function(){
+            if(newWorker.state === 'installed' && navigator.serviceWorker.controller){
+              console.log('[PWA] New version available');
+            }
+          });
+        });
+      })
+      .catch(function(err){
+        console.warn('[PWA] Service Worker registration failed:', err);
+      });
+  });
+}
+
+var deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+window.addEventListener('appinstalled', function(){
+  deferredInstallPrompt = null;
+});
+
+</script>
+</body>
+</html>

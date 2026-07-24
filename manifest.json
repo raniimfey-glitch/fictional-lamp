@@ -1,0 +1,123 @@
+{
+  "id": "com.funlearning.ranimfey",
+  "name": "رنيم فاي | التعلم الممتع",
+  "short_name": "رنيم فاي",
+  "description": "تطبيقات تعليمية تفاعلية باللغة العربية للأطفال، وفق المنهج الجزائري",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f2f8f6",
+  "theme_color": "#1aab8a",
+  "categories": [
+    "education",
+    "kids"
+  ],
+  "icons": [
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://fun-learning-sam.vercel.app/og-image.png",
+      "sizes": "1200x1200",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "الصفحة الرئيسية — رنيم فاي"
+    },
+    {
+      "src": "https://fun-learning-sam.vercel.app/og-image.png",
+      "sizes": "1200x1200",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "منصة التعلم الممتع"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "لغة عربية",
+      "short_name": "عربية",
+      "url": "/",
+      "icons": [
+        {
+          "src": "https://fun-learning-sam.vercel.app/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "رياضيات",
+      "short_name": "رياضيات",
+      "url": "/",
+      "icons": [
+        {
+          "src": "https://fun-learning-sam.vercel.app/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}
