@@ -188,5 +188,15 @@
     "icon": "🦁",
     "paid": false,
     "paidPass": ""
-  }
+  },
+  {
+  "name": "الجهاز التنفسي",
+  "desc": "تطبيق تفاعلي للجهاز التنفسي",
+  "url": "https://fictional-telegram-pink.vercel.app/",
+  "cat": "علوم",
+  "age": "الصفين 4 و 5",
+  "icon": "🫁",
+  "paid": false,
+  "paidPass": ""
+},
 ]
